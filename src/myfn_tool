@@ -79,13 +79,16 @@ myud_caw()
                 echo_error "Error: myud_caw url error"
         fi
         
+        #
+                if ( ! echo "$MD5" | grep "" &> /dev/null ); then
+                        
+                fi
         
+        #
         
+        #
         
-        
-        
-        
-        
+        #
         
         
         
