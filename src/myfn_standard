@@ -7,6 +7,7 @@
 ############################################################
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 MYFN_LIST=""
+START_TIME=$(date "+%s")
 
 
 ############################################################
@@ -101,6 +102,118 @@ check_root()
 {
         if [[ "$(id -u)" != "0" ]]; then
                 echo_error "Error: must run with root"
+        fi
+}
+
+
+############################################################
+#
+#       008 - 计时器
+#
+#       time_used
+#
+############################################################
+time_used()
+{
+        local END_TIME=$(date "+%s")
+        local MINUTES=$(( (END_TIME - START_TIME) / 60 ))
+        local SECONDS=$(( (END_TIME - START_TIME) % 60 ))
+        
+        echo_color "${MINUTES} minutes ${SECONDS} seconds" "34"
+}
+
+
+############################################################
+#
+#       009 - 显示成功并计时
+#
+#       time_success
+#
+############################################################
+time_success()
+{
+        display_success "$(time_used)"
+}
+
+
+############################################################
+#
+#       010 - 调整系统时间
+#
+#       adjust_time
+#
+############################################################
+adjust_time()
+{
+        local NUM=
+        local SECONDS=
+        
+        if ( ping -c 1 ntp1.aliyun.com &> /dev/null ); then
+                
+                if ( ! type -p ntpdate &> /dev/null ); then
+                        
+                        for (( NUM=0; NUM < 5; NUM++ )); do
+                                yum -y install ntpdate
+                        done
+                        
+                fi
+                
+                systemctl stop    ntpd || true
+                systemctl disable ntpd || true
+                
+                for (( NUM=1; NUM < 11; NUM++ )); do
+                        
+                        echo "adjust system time ${NUM} ..."
+                        
+                        SECONDS=$(ntpdate ntp1.aliyun.com | awk '{ print $(NF-1) }')
+                        
+                        if [[ "0" < "$SECONDS" ]] && [[ "$SECONDS" < "1" ]]; then
+                                break 1
+                        fi
+                        
+                done
+                
+                hwclock -w
+                
+        fi
+}
+
+
+############################################################
+#
+#       011 - 获取配置文件的键值对
+#
+#       config_file  "键"  "值"  "文件"
+#
+############################################################
+config_file()
+{
+        local KEY="$1"
+        local VALUE="$2"
+        local FILE="$3"
+        local LINE=
+        
+        if [[ -s "$FILE" ]]; then
+                
+                while read LINE; do
+                        
+                        if ( echo "$LINE" | grep -iP "^[ \t]*${KEY}[ \t]*=[ \t\"]*${VALUE}[ \t\"]*$" &> /dev/null ); then
+                                
+                                LINE=$(echo "$LINE" | sed "s/^[ \t]*//g" | sed "s/[ \t]*$//g")
+                                LINE=$(echo "$LINE" | sed "s/[ \t]*=[ \t]*/=/g")
+                                LINE=$(echo "$LINE" | sed "s/\"[ \t]*/\"/g" | sed "s/[ \t]*\"/\"/g")
+                                
+                                KEY=$(echo "$LINE" | cut -d= -f 1 | tr "[a-z]" "[A-Z]")
+                                VALUE=$(echo "$LINE" | cut -d= -f 2-)
+                                
+                                LINE="${KEY}=${VALUE}"
+                                
+                                export "$LINE"
+                                
+                        fi
+                        
+                done < ${FILE}
+                
         fi
 }
 
