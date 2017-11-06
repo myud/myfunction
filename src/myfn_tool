@@ -22,9 +22,11 @@ myud_caw()
         local FILE=
         local HTTP=
         
+        #
         local ALL_LONG_OPTION=$(long_option "$@")
         local ALL_SHORT_OPTION=$(short_option "$@")
         
+        #
         if   ( echo "$ALL_LONG_OPTION" | grep "^--axel$" &> /dev/null ); then
                 TOOLS="axel"
         elif ( echo "$ALL_SHORT_OPTION" | grep "^-a$" &> /dev/null ); then
@@ -37,6 +39,7 @@ myud_caw()
                 :
         fi
         
+        #
         if   ( echo "$ALL_LONG_OPTION" | grep "^--hold$" &> /dev/null ); then
                 HOLD_REMOVE="hold"
         elif ( echo "$ALL_SHORT_OPTION" | grep "^-h$" &> /dev/null ); then
@@ -45,6 +48,7 @@ myud_caw()
                 :
         fi
         
+        #
         if   [[ -n "$(long_argument "--dir" "$@")" ]]; then
                 DIR=$(long_argument "--dir" "$@")
         elif [[ -n "$(short_argument "-d" "$@")" ]]; then
@@ -53,6 +57,7 @@ myud_caw()
                 :
         fi
         
+        #
         if   [[ -n "$(long_argument "--md5" "$@")" ]]; then
                 MD5=$(long_argument "--md5" "$@")
         elif [[ -n "$(short_argument "-m" "$@")" ]]; then
@@ -61,6 +66,7 @@ myud_caw()
                 :
         fi
         
+        #
         if [[ -n "$URL" ]] && ( echo "$URL" | grep "^http[s]*://." &> /dev/null ); then
                 FILE=$( echo "$URL" | awk -F/ '{ if (NF>3) { print $NF } }' )
                 HTTP=$( echo "$URL" | awk -F: '{ print $1 }' )
