@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-
 ############################################################
 #
 #       1.位置参量
@@ -11,32 +9,16 @@ export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 set -eu
 #set -x
 
-echo_color()
-{
-        echo -e "\e[1m\e[40;$2m$1\e[0m"
-}
+MYFN_STANDARD="/usr/local/bin/myfn_standard"
 
-echo_error()
-{
-        echo_color "$1" "31"
-        exit 1
-}
-
-echo_warning()
-{
-        echo_color "$1" "33"
-        sleep 5
-}
-
-if [[ "$(id -u)" != "0" ]]; then
-        echo_error "Error: must run with root"
-fi
-
-if [[ -s "/usr/local/bin/myfunction.sh" ]]; then
-        . /usr/local/bin/myfunction.sh
+if [[ -s "$MYFN_STANDARD" ]]; then
+        . ${MYFN_STANDARD}
 else
-        echo_error "Error: myfunction.sh not found"
+        echo "Error: ${MYFN_STANDARD} not found"
+        exit 1
 fi
+
+check_root
 
 ############################################################
 #
