@@ -13,61 +13,19 @@ myud_caw()
         # 定义命令参数的个数
         COMMAND_ARGUMENT_NUMBER="1"
         
-        # 变量
+        # 获取变量
+        local TOOLS="curl"
+        local HOLD_REMOVE="remove"
+        local DIR=$(pwd)
+        local MD5=
         local URL=$(command_argument1 "$@")
         local FILE=
         local HTTP=
-        local MD5=
-        local DIR=$(pwd)
-        local HOLD_REMOVE="remove"
-        local TOOLS="curl"
-        local FILE_PATH=
         
         local ALL_LONG_OPTION=$(long_option "$@")
         local ALL_SHORT_OPTION=$(short_option "$@")
         
-        # 检测 URL
-        if [[ -n "$URL" ]] && ( echo "$URL" | grep "^http[s]*://." &> /dev/null ); then
-                FILE=$( echo "$URL" | awk -F/ '{ if (NF>3) { print $NF } }' )
-                HTTP=$( echo "$URL" | awk -F: '{ print $1 }' )
-        else
-                echo_error "Error: myud_caw missing url"
-        fi
-
-        # 检测 FILE
-        if [[ -z "$FILE" ]]; then
-                echo_error "Error: myud_caw url error"
-        fi
-        
-        # 获取 MD5
-          if [[ -n "$(long_argument "--md5" "$@")" ]]; then
-                MD5=$(long_argument "--md5" "$@")
-        elif [[ -n "$(short_argument "-m" "$@")" ]]; then
-                MD5=$(short_argument "-m" "$@")
-        else
-                :
-        fi
-        
-        # 获取 DIR
-          if [[ -n "$(long_argument "--dir" "$@")" ]]; then
-                DIR=$(long_argument "--dir" "$@")
-        elif [[ -n "$(short_argument "-d" "$@")" ]]; then
-                DIR=$(short_argument "-d" "$@")
-        else
-                :
-        fi
-        
-        # 获取 HOLD_REMOVE
-          if ( echo "$ALL_LONG_OPTION" | grep "^--hold$" &> /dev/null ); then
-                HOLD_REMOVE="hold"
-        elif ( echo "$ALL_SHORT_OPTION" | grep "^-h$" &> /dev/null ); then
-                HOLD_REMOVE="hold"
-        else
-                :
-        fi
-        
-        # 获取 TOOLS
-          if ( echo "$ALL_LONG_OPTION" | grep "^--axel$" &> /dev/null ); then
+        if   ( echo "$ALL_LONG_OPTION" | grep "^--axel$" &> /dev/null ); then
                 TOOLS="axel"
         elif ( echo "$ALL_SHORT_OPTION" | grep "^-a$" &> /dev/null ); then
                 TOOLS="axel"
@@ -78,6 +36,131 @@ myud_caw()
         else
                 :
         fi
+        
+        if   ( echo "$ALL_LONG_OPTION" | grep "^--hold$" &> /dev/null ); then
+                HOLD_REMOVE="hold"
+        elif ( echo "$ALL_SHORT_OPTION" | grep "^-h$" &> /dev/null ); then
+                HOLD_REMOVE="hold"
+        else
+                :
+        fi
+        
+        if   [[ -n "$(long_argument "--dir" "$@")" ]]; then
+                DIR=$(long_argument "--dir" "$@")
+        elif [[ -n "$(short_argument "-d" "$@")" ]]; then
+                DIR=$(short_argument "-d" "$@")
+        else
+                :
+        fi
+        
+        if   [[ -n "$(long_argument "--md5" "$@")" ]]; then
+                MD5=$(long_argument "--md5" "$@")
+        elif [[ -n "$(short_argument "-m" "$@")" ]]; then
+                MD5=$(short_argument "-m" "$@")
+        else
+                :
+        fi
+        
+        if [[ -n "$URL" ]] && ( echo "$URL" | grep "^http[s]*://." &> /dev/null ); then
+                FILE=$( echo "$URL" | awk -F/ '{ if (NF>3) { print $NF } }' )
+                HTTP=$( echo "$URL" | awk -F: '{ print $1 }' )
+        else
+                echo_error "Error: myud_caw missing url"
+        fi
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        # 变量
+        
+        
+        
+        
+        
+        
+        
+        local FILE_PATH=
+        
+        
+        
+        # 检测 URL
+        
+
+        # 检测 FILE
+        if [[ -z "$FILE" ]]; then
+                echo_error "Error: myud_caw url error"
+        fi
+        
+        # 获取 MD5
+          
+        
+        # 获取 DIR
+          
+        
+        # 获取 HOLD_REMOVE
+          
+        
+        # 获取 TOOLS
+        
         
         # 创建目录
         mkdir -p ${DIR}
