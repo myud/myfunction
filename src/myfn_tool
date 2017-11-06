@@ -74,8 +74,10 @@ myud_caw()
                 echo_error "Error: myud_caw missing url"
         fi
         
-        
-        
+        # 检查变量
+        if [[ -z "$FILE" ]]; then
+                echo_error "Error: myud_caw url error"
+        fi
         
         
         
@@ -152,9 +154,7 @@ myud_caw()
         
 
         # 检测 FILE
-        if [[ -z "$FILE" ]]; then
-                echo_error "Error: myud_caw url error"
-        fi
+        
         
         # 获取 MD5
           
