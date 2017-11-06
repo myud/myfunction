@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 
 ############################################################
 #
@@ -11,10 +11,7 @@ export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 set -eu
 #set -x
 
-echo_color()
-{
-        echo -e "\e[1m\e[40;$2m$1\e[0m"
-}
+
 
 echo_error()
 {
