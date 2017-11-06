@@ -6,7 +6,7 @@
 #
 ############################################################
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-MYFN_LIST="myfn_option"
+MYFN_LIST="myfn_option myfn_tool"
 START_TIME=$(date "+%s")
 
 

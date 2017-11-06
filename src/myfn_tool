@@ -1,0 +1,162 @@
+#!/bin/bash
+
+# caw [ --curl|--axel|--wget --remove|--hold --dir=DIR --md5=MD5 ] URL
+# caw [ -c|-a|-w -r|-h -d DIR -m MD5 ] URL
+
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+set -eu
+#set -x
+
+echo_color()
+{
+        echo -e "\e[1m\e[40;$2m$1\e[0m"
+}
+
+echo_error()
+{
+        echo_color "$1" "31"
+        exit 1
+}
+
+echo_warning()
+{
+        echo_color "$1" "33"
+        sleep 5
+}
+
+if [[ "$(id -u)" != "0" ]]; then
+        echo_error "Error: must run with root"
+fi
+
+if [[ -s "/usr/local/bin/option.sh" ]]; then
+        . /usr/local/bin/option.sh
+else
+        echo_error "Error: option.sh not found"
+fi
+
+# 定义指令参数的个数
+COMMAND_ARGUMENT_NUMBER="1"
+
+# 全局变量
+URL=$(command_argument1 "$@")
+FILE=
+MD5=
+DIR=$(pwd)
+HOLD_REMOVE="remove"
+TOOLS="curl"
+
+ALL_LONG_OPTION=$(long_option "$@")
+ALL_SHORT_OPTION=$(short_option "$@")
+
+# 检测 URL
+if [[ -n "$URL" ]] && ( echo "$URL" | grep "^http[s]*://." &> /dev/null ); then
+        FILE=$( echo "$URL" | awk -F/ '{ if (NF>3) { print $NF } }' )
+else
+        echo_error "Error: caw missing url"
+fi
+
+# 检测 FILE
+if [[ -z "$FILE" ]]; then
+        echo_error "Error: caw url error"
+fi
+
+# 获取 MD5
+  if [[ -n "$(long_argument "--md5" "$@")" ]]; then
+        MD5=$(long_argument "--md5" "$@")
+elif [[ -n "$(short_argument "-m" "$@")" ]]; then
+        MD5=$(short_argument "-m" "$@")
+else
+        :
+fi
+
+# 获取 DIR
+  if [[ -n "$(long_argument "--dir" "$@")" ]]; then
+        DIR=$(long_argument "--dir" "$@")
+elif [[ -n "$(short_argument "-d" "$@")" ]]; then
+        DIR=$(short_argument "-d" "$@")
+else
+        :
+fi
+
+# 获取 HOLD_REMOVE
+  if ( echo "$ALL_LONG_OPTION" | grep "^--hold$" &> /dev/null ); then
+        HOLD_REMOVE="hold"
+elif ( echo "$ALL_SHORT_OPTION" | grep "^-h$" &> /dev/null ); then
+        HOLD_REMOVE="hold"
+else
+        :
+fi
+
+# 获取 TOOLS
+  if ( echo "$ALL_LONG_OPTION" | grep "^--axel$" &> /dev/null ); then
+        TOOLS="axel"
+elif ( echo "$ALL_SHORT_OPTION" | grep "^-a$" &> /dev/null ); then
+        TOOLS="axel"
+elif ( echo "$ALL_LONG_OPTION" | grep "^--wget$" &> /dev/null ); then
+        TOOLS="wget"
+elif ( echo "$ALL_SHORT_OPTION" | grep "^-w$" &> /dev/null ); then
+        TOOLS="wget"
+else
+        :
+fi
+
+# 创建目录
+mkdir -p ${DIR}
+
+# 安装工具
+for COMMAND in "axel" "wget" "curl"; do
+        
+        if ( ! type -p ${COMMAND} &> /dev/null ); then
+                
+                for (( NUM=0; NUM < 5; NUM++ )); do
+                        yum -y install curl wget axel
+                done
+                
+                break 1
+                
+        fi
+        
+done
+
+# 文件路径
+FILE_PATH="${DIR}/${FILE}"
+
+# 删除文件
+if [[ -f "$FILE_PATH" ]] && [[ "$HOLD_REMOVE" == "remove" ]]; then
+        rm -rf "$FILE_PATH"
+fi
+
+# 下载文件并检测 MD5
+for (( NUM=0; NUM < 10; NUM++ )); do
+        if [[ -s "$FILE_PATH" ]]; then
+                
+                if [[ -n "$MD5" ]] && [[ "$MD5" != "$(md5sum "$FILE_PATH" | awk '{ print $1 }')" ]]; then
+                        rm -rf "$FILE_PATH"
+                else
+                        break 1
+                fi
+                
+        else
+        
+        [[ "$TOOLS" == "curl" ]] && curl -o "$FILE_PATH" "$URL"
+        
+        [[ "$TOOLS" == "axel" ]] && axel -n 10 -o "$DIR" "$URL"
+        
+        [[ "$TOOLS" == "wget" ]] && wget -c -P "$DIR" "$URL"
+        
+        fi
+done
+
+# 下载失败
+if [[ "$NUM" == "10" ]]; then
+        echo_error "Error: ${FILE} download failed"
+fi
+
+# 挂载 ISO
+if ( echo "$FILE" | grep "\.iso$" &> /dev/null ); then
+        mkdir -p ${DIR}/ISO
+        umount ${DIR}/ISO &> /dev/null || true
+        mount -o loop "$FILE_PATH" ${DIR}/ISO
+        sleep 3
+fi
