@@ -14,7 +14,7 @@ COMMAND_ARGUMENT_NUMBER="0"
 #
 #       101 - 获取顺数第几个选项、编号
 #
-#       front_option_number  "数字"  "多个选项"
+#       front_option_number  "整数"  "多个选项"
 #
 ############################################################
 front_option_number()
@@ -44,7 +44,7 @@ front_option_number()
 #
 #       102 - 获取倒数第几个选项、编号及顺数编号
 #
-#       back_option_number  "$@"
+#       back_option_number  "整数"  "多个选项"
 #
 ############################################################
 back_option_number()
