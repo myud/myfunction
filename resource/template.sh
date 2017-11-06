@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 ############################################################
 #
@@ -11,13 +11,26 @@
 set -eu
 #set -x
 
+echo_color()
+{
+        echo -e "\e[1m\e[40;$2m$1\e[0m"
+}
 
+echo_error()
+{
+        echo_color "$1" "31"
+        exit 1
+}
 
+echo_warning()
+{
+        echo_color "$1" "33"
+        sleep 5
+}
 
-
-
-
-
+if [[ "$(id -u)" != "0" ]]; then
+        echo_error "Error: must run with root"
+fi
 
 if [[ -s "/usr/local/bin/myfunction.sh" ]]; then
         . /usr/local/bin/myfunction.sh
