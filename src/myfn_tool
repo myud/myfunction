@@ -13,7 +13,7 @@ myud_caw()
         # 定义命令参数的个数
         COMMAND_ARGUMENT_NUMBER="1"
         
-        # 获取变量
+        # 定义变量的初始值
         local TOOLS="curl"
         local HOLD_REMOVE="remove"
         local DIR=$(pwd)
@@ -22,7 +22,6 @@ myud_caw()
         local FILE=
         local HTTP=
         
-        #
         local ALL_LONG_OPTION=$(long_option "$@")
         local ALL_SHORT_OPTION=$(short_option "$@")
         
