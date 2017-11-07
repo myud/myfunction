@@ -25,7 +25,7 @@ myud_caw()
         local ALL_LONG_OPTION=$(long_option "$@")
         local ALL_SHORT_OPTION=$(short_option "$@")
         
-        #
+        # 获取 TOOLS
         if   ( echo "$ALL_LONG_OPTION" | grep "^--axel$" &> /dev/null ); then
                 TOOLS="axel"
         elif ( echo "$ALL_SHORT_OPTION" | grep "^-a$" &> /dev/null ); then
