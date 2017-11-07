@@ -65,7 +65,7 @@ myud_caw()
                 :
         fi
         
-        #
+        # 获取 FILE, HTTP, 并检测 URL
         if [[ -n "$URL" ]] && ( echo "$URL" | grep "^http[s]*://." &> /dev/null ); then
                 FILE=$( echo "$URL" | awk -F/ '{ if (NF>3) { print $NF } }' )
                 HTTP=$( echo "$URL" | awk -F: '{ print $1 }' )
