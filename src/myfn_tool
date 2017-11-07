@@ -47,7 +47,7 @@ myud_caw()
                 :
         fi
         
-        #
+        # 获取 DIR
         if   [[ -n "$(long_argument "--dir" "$@")" ]]; then
                 DIR=$(long_argument "--dir" "$@")
         elif [[ -n "$(short_argument "-d" "$@")" ]]; then
