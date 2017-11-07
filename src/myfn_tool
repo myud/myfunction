@@ -80,6 +80,37 @@ myud_caw()
                 echo_error "Error: myud_caw url error"
         fi
         
+        # 检测 MD5
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        # 检测 DIR
+        # 检测 HOLD_REMOVE
+        # 检测 TOOLS
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         #
                 if ( ! echo "$MD5" | grep "" &> /dev/null ); then
                         
