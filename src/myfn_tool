@@ -22,6 +22,9 @@ myud_caw()
         local FILE=
         local HTTP=
         
+        local FILE_PATH=
+        local NUM=
+        
         local ALL_LONG_OPTION=$(long_option "$@")
         local ALL_SHORT_OPTION=$(short_option "$@")
         
@@ -73,7 +76,6 @@ myud_caw()
                 echo_error "Error: myud_caw missing url"
         fi
         
-        # 检查变量
         if [[ -z "$FILE" ]]; then
                 echo_error "Error: myud_caw url error"
         fi
