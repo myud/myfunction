@@ -88,9 +88,10 @@ myud_caw()
         fi
         
         # 检测 DIR
-        # 检测 HOLD_REMOVE
-        # 检测 TOOLS
-        
+        # 检测无效选项
+        if ( echo "$ALL_LONG_OPTION" | grep -vE "\--curl|--axel|--wget|--remove|--hold|--dir|--md5" &> /dev/null ); then
+                
+        fi
         
         
         
