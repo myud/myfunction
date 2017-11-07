@@ -38,7 +38,7 @@ myud_caw()
                 :
         fi
         
-        #
+        # 获取 HOLD_REMOVE
         if   ( echo "$ALL_LONG_OPTION" | grep "^--hold$" &> /dev/null ); then
                 HOLD_REMOVE="hold"
         elif ( echo "$ALL_SHORT_OPTION" | grep "^-h$" &> /dev/null ); then
