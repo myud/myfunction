@@ -28,6 +28,9 @@ myud_caw()
         local ALL_LONG_OPTION=$(long_option "$@")
         local ALL_SHORT_OPTION=$(short_option "$@")
         
+        local ERROR_LONG_OPTION=
+        local ERROR_SHORT_OPTION=
+        
         # 获取 TOOLS
         if   ( echo "$ALL_LONG_OPTION" | grep "^--axel$" &> /dev/null ); then
                 TOOLS="axel"
@@ -88,7 +91,17 @@ myud_caw()
         fi
         
         # 检测 DIR
+        
         # 检测无效选项
+        ERROR_LONG_OPTION=$(echo "$ALL_LONG_OPTION" | grep -vE "^--curl$|^--axel$|^--wget$|^--remove$|^--hold$|^--dir$|^--md5$" | sed -n "1p")
+        ERROR_SHORT_OPTION=$(echo "$ALL_SHORT_OPTION" | grep -vE "^-c$|^-a$|^-w$|^-r$|^-h$|^-d$|^-m$" | sed -n "1p")
+        
+        
+        
+        
+        
+        
+        
         if ( echo "$ALL_LONG_OPTION" | grep -vE "\--curl|--axel|--wget|--remove|--hold|--dir|--md5" &> /dev/null ); then
                 
         fi
