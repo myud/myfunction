@@ -7,6 +7,7 @@
 #       myud_caw  [  -c|-a|-w  -r|-h  -d DIR  -m MD5  ]  URL
 #
 ############################################################
+#  myud_caw  [  -cr  -d DIR  -m MD5  ]  URL
 #  myud_caw  [  --curl|--axel|--wget  --remove|--hold  --dir=DIR  --md5=MD5  ]  URL
 myud_caw()
 {
