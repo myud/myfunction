@@ -22,6 +22,9 @@ myud_caw()
         local FILE=
         local HTTP=
         
+        local ALL_LONG_OPTION=$(long_option "$@")
+        local ALL_SHORT_OPTION=$(short_option "$@")
+        
         
         
         
@@ -37,4 +40,8 @@ myud_caw()
         echo $URL
         echo $FILE
         echo $HTTP
+        echo ====
+        echo "$ALL_LONG_OPTION"
+        echo ====
+        echo "$ALL_SHORT_OPTION"
 }
