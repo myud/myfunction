@@ -10,6 +10,26 @@
 #  myud_caw  [  --curl|--axel|--wget  --remove|--hold  --dir=DIR  --md5=MD5  ]  URL
 myud_caw()
 {
+        # 定义命令参数的个数
+        COMMAND_ARGUMENT_NUMBER="1"
+        
+        # 定义变量的初始值
+        local TOOLS="curl"
+        local HOLD_REMOVE="remove"
+        local DIR=$(pwd)
+        local MD5=
+        local URL=$(command_argument1 "$@")
+        local FILE=
+        local HTTP=
+        
+        
+        
+        
+        
+        
+        
+        
+        
         echo $TOOLS
         echo $HOLD_REMOVE
         echo $DIR
