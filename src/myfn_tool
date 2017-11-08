@@ -32,22 +32,22 @@ myud_caw()
         local ERROR_SHORT_OPTION=
         
         # 获取 TOOLS
-        if   ( echo "$ALL_LONG_OPTION" | grep "--axel$" &> /dev/null ); then
+        if   ( echo "$ALL_LONG_OPTION" | grep "\--axel$" &> /dev/null ); then
                 TOOLS="axel"
-        elif ( echo "$ALL_SHORT_OPTION" | grep "-a" &> /dev/null ); then
+        elif ( echo "$ALL_SHORT_OPTION" | grep "\-a" &> /dev/null ); then
                 TOOLS="axel"
-        elif ( echo "$ALL_LONG_OPTION" | grep "--wget$" &> /dev/null ); then
+        elif ( echo "$ALL_LONG_OPTION" | grep "\--wget$" &> /dev/null ); then
                 TOOLS="wget"
-        elif ( echo "$ALL_SHORT_OPTION" | grep "-w" &> /dev/null ); then
+        elif ( echo "$ALL_SHORT_OPTION" | grep "\-w" &> /dev/null ); then
                 TOOLS="wget"
         else
                 :
         fi
         
         # 获取 HOLD_REMOVE
-        if   ( echo "$ALL_LONG_OPTION" | grep "--hold$" &> /dev/null ); then
+        if   ( echo "$ALL_LONG_OPTION" | grep "\--hold$" &> /dev/null ); then
                 HOLD_REMOVE="hold"
-        elif ( echo "$ALL_SHORT_OPTION" | grep "-h" &> /dev/null ); then
+        elif ( echo "$ALL_SHORT_OPTION" | grep "\-h" &> /dev/null ); then
                 HOLD_REMOVE="hold"
         else
                 :
