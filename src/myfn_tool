@@ -4,14 +4,12 @@
 #
 #       116 - Myud 的下载工具
 #
-#       myud_caw  [ --curl|--axel|--wget --remove|--hold --dir=DIR --md5=MD5 ]  URL
-#       myud_caw  [ -c|-a|-w -r|-h -d DIR -m MD5 ]  URL
+#       myud_caw  [  -c|-a|-w  -r|-h  -d DIR  -m MD5  ]  URL
 #
 ############################################################
+#  myud_caw  [  --curl|--axel|--wget  --remove|--hold  --dir=DIR  --md5=MD5  ]  URL
 myud_caw()
 {
-        
-        
         echo $TOOLS
         echo $HOLD_REMOVE
         echo $DIR
