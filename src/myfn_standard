@@ -227,7 +227,7 @@ if [[ -n "$MYFN_LIST" ]]; then
         
         for MYFN_FILE in ${MYFN_LIST}; do
                 
-                MYFN_PATH="/usr/local/bin/${MYFN_FILE}"
+                MYFN_PATH="/usr/local/lib/${MYFN_FILE}"
                 
                 if [[ -s "$MYFN_PATH" ]]; then
                         . ${MYFN_PATH}
