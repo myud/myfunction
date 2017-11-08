@@ -15,16 +15,8 @@ fi
 #
 ############################################################
 FUNCTION_DIR="/usr/local/lib"
-COMMAND_DIR="/usr/local/bin"
-RESOURCE_DIR="/root/.myud/res"
-TMPFILE_DIR="/root"
 
-HOLD_FUNCTION=
-HOLD_COMMAND=
-HOLD_TMPFILE=
-REMOVE_COMMAND=
-REMOVE_RESOURCE=
-REMOVE_TMPFILE=
+HOLD_FUNCTION="myfn_standard myfn_option myfn_tool"
 
 ############################################################
 #
@@ -59,7 +51,7 @@ remove()
 #       操作
 #
 ############################################################
-remove "$" ${}
+remove "$FUNCTION_DIR" ${HOLD_FUNCTION}
 
 ############################################################
 #
