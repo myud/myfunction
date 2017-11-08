@@ -93,8 +93,8 @@ myud_caw()
         # 检测 DIR
         
         # 检测无效选项
-        ERROR_LONG_OPTION=$(echo "$ALL_LONG_OPTION" | grep -vE "^--curl$|^--axel$|^--wget$|^--remove$|^--hold$|^--dir$|^--md5$" | sed -n "1p")
-        ERROR_SHORT_OPTION=$(echo "$ALL_SHORT_OPTION" | grep -vE "^-c$|^-a$|^-w$|^-r$|^-h$|^-d$|^-m$" | sed -n "1p")
+        ERROR_LONG_OPTION=$(echo "$ALL_LONG_OPTION" | grep -vE "\--curl$|--axel$|--wget$|--remove$|--hold$|--dir$|--md5$" | sed -n "1p")
+        ERROR_SHORT_OPTION=$(echo "$ALL_SHORT_OPTION" | grep -vE "\-c|-a|-w|-r|-h|-d|-m" | sed -n "1p")
         
         
         
