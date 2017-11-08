@@ -104,6 +104,19 @@ myud_caw()
                 echo_error "Error: unrecognized option ${ERROR_SHORT_OPTION}"
         fi
         
+        
+        
+        
+        
+        
+        
+        echo $TOOLS
+echo $HOLD_REMOVE
+echo $DIR
+echo $MD5
+echo $URL
+echo $FILE
+echo $HTTP
         exit 0
         
         
@@ -169,4 +182,3 @@ myud_caw()
                 sleep 3
         fi
 }
-myud_caw "$@"
