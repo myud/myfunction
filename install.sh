@@ -14,14 +14,14 @@ fi
 #       变量
 #
 ############################################################
-URL1=
-URL2=
+URL1="https://gitee.com/mydownload/myfunction/raw/master"
+URL2="src"
 
 FUNCTION_DIR="/usr/local/lib"
 COMMAND_DIR="/usr/local/bin"
 RESOURCE_DIR="/root/.myud/res"
 
-HOLD_FUNCTION=
+HOLD_FUNCTION="myfn_standard myfn_option myfn_tool"
 HOLD_COMMAND=
 REMOVE_COMMAND=
 REMOVE_RESOURCE=
@@ -85,7 +85,7 @@ download()
 #       操作
 #
 ############################################################
-download "$" "$URL1" "$URL2" ${}
+download "$FUNCTION_DIR" "$URL1" "$URL2" ${HOLD_FUNCTION}
 
 ############################################################
 #
