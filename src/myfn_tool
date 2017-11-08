@@ -96,122 +96,17 @@ myud_caw()
         ERROR_LONG_OPTION=$(echo "$ALL_LONG_OPTION" | grep -vE "\--curl$|--axel$|--wget$|--remove$|--hold$|--dir$|--md5$" | sed -n "1p")
         ERROR_SHORT_OPTION=$(echo "$ALL_SHORT_OPTION" | grep -vE "\-c|-a|-w|-r|-h|-d|-m" | sed -n "1p")
         
-        
-        
-        
-        
-        
-        
-        if ( echo "$ALL_LONG_OPTION" | grep -vE "\--curl|--axel|--wget|--remove|--hold|--dir|--md5" &> /dev/null ); then
-                
+        if [[ -n "$ERROR_LONG_OPTION" ]]; then
+                echo_error "Error: unrecognized option ${ERROR_LONG_OPTION}"
         fi
         
+        if [[ -n "$ERROR_SHORT_OPTION" ]]; then
+                echo_error "Error: unrecognized option ${ERROR_SHORT_OPTION}"
+        fi
         
+        exit 0
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        #
-                if ( ! echo "$MD5" | grep "" &> /dev/null ); then
-                        
-                fi
-        
-        #
-        
-        #
-        
-        #
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        # 变量
-        
-        
-        
-        
-        
-        
-        
-        local FILE_PATH=
-        
-        
-        
-        # 检测 URL
-        
-
-        # 检测 FILE
-        
-        
-        # 获取 MD5
-          
-        
-        # 获取 DIR
-          
-        
-        # 获取 HOLD_REMOVE
-          
-        
-        # 获取 TOOLS
         
         
         # 创建目录
@@ -274,3 +169,4 @@ myud_caw()
                 sleep 3
         fi
 }
+myud_caw "$@"
