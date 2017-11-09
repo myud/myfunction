@@ -251,7 +251,8 @@ get_option()
         
         local OPTION=
         local NUM="0"
-        local NUMBER=
+        local FRONT_NUMBER=
+        local BACK_NUMBER=
         
         # 检测 $1
         COMMAND_ARGUMENT_NUMBER=$(get_number "$COMMAND_ARGUMENT_NUMBER")
@@ -287,14 +288,24 @@ get_option()
                 
         fi
         
+        # 获取命令参数
+        if [[ "$OPTION_ARGUMENT_TYPE" == "command_argument" ]]; then
+                
+                BACK_NUMBER=$(( $#-OPTION_ARGUMENT+1 ))
+                echo "${!BACK_NUMBER}"
+                
+                return 0
+                
+        fi
+        
         #
-        NUMBER=$(( $#-COMMAND_ARGUMENT_NUMBER ))
+        FRONT_NUMBER=$(( $#-COMMAND_ARGUMENT_NUMBER ))
         
         for OPTION in "$@"; do
                 
                 NUM=$(( NUM+1 ))
                 
-                if [[ "$NUM" < "3" ]] || [[ "$NUM" > "$NUMBER" ]]; then
+                if [[ "$NUM" < "3" ]] || [[ "$NUM" > "$FRONT_NUMBER" ]]; then
                         continue 1
                 fi
                 
