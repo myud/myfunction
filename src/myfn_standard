@@ -254,6 +254,8 @@ get_option()
         local FRONT_NUMBER=
         local BACK_NUMBER=
         
+        local COMMAND_ARGUMENT=
+        
         # 检测 $1
         COMMAND_ARGUMENT_NUMBER=$(get_number "$COMMAND_ARGUMENT_NUMBER")
         
@@ -292,7 +294,11 @@ get_option()
         if [[ "$OPTION_ARGUMENT_TYPE" == "command_argument" ]]; then
                 
                 BACK_NUMBER=$(( $#-OPTION_ARGUMENT+1 ))
-                echo "${!BACK_NUMBER}"
+                COMMAND_ARGUMENT="${!BACK_NUMBER}"
+                
+                if ( ! echo "$COMMAND_ARGUMENT" | grep "^-" &> /dev/null ); then
+                        echo "$COMMAND_ARGUMENT"
+                fi
                 
                 return 0
                 
