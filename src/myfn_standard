@@ -237,6 +237,57 @@ get_number()
 
 ############################################################
 #
+#       013 - 
+#
+#       get_option  "命令参数的个数"  "选项或参数"  "$@"
+#
+############################################################
+get_option()
+{
+        local COMMAND_ARGUMENT_NUMBER="$1"
+        local OPTION_ARGUMENT="$2"
+        
+        COMMAND_ARGUMENT_NUMBER=$(get_number "$COMMAND_ARGUMENT_NUMBER")
+        
+        if [[ -z "$COMMAND_ARGUMENT_NUMBER" ]] || [[ "$COMMAND_ARGUMENT_NUMBER" > "$(( $#-2 ))" ]]; then
+                echo_error "Error: unrecognized option ${1}"
+        fi
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+}
+
+
+############################################################
+#
 #       100 - 导入函数
 #
 ############################################################
