@@ -251,8 +251,8 @@ get_option()
         
         local OPTION=
         local NUM="0"
+        local NUMBER=
         local FRONT_NUMBER=
-        local BACK_NUMBER=
         
         local COMMAND_ARGUMENT=
         
@@ -293,8 +293,8 @@ get_option()
         # 获取命令参数
         if [[ "$OPTION_ARGUMENT_TYPE" == "command_argument" ]]; then
                 
-                BACK_NUMBER=$(( $#-OPTION_ARGUMENT+1 ))
-                COMMAND_ARGUMENT="${!BACK_NUMBER}"
+                FRONT_NUMBER=$(( $#-OPTION_ARGUMENT+1 ))
+                COMMAND_ARGUMENT="${!FRONT_NUMBER}"
                 
                 if ( ! echo "$COMMAND_ARGUMENT" | grep "^-" &> /dev/null ); then
                         echo "$COMMAND_ARGUMENT"
@@ -305,13 +305,13 @@ get_option()
         fi
         
         #
-        FRONT_NUMBER=$(( $#-COMMAND_ARGUMENT_NUMBER ))
+        NUMBER=$(( $#-COMMAND_ARGUMENT_NUMBER ))
         
         for OPTION in "$@"; do
                 
                 NUM=$(( NUM+1 ))
                 
-                if [[ "$NUM" < "3" ]] || [[ "$NUM" > "$FRONT_NUMBER" ]]; then
+                if [[ "$NUM" < "3" ]] || [[ "$NUM" > "$NUMBER" ]]; then
                         continue 1
                 fi
                 
