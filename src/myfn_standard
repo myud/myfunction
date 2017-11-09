@@ -263,6 +263,15 @@ get_option()
                 
         elif ( echo "$OPTION_ARGUMENT" | grep "^[0-9][0-9]*$" &> /dev/null ); then
                 
+                OPTION_ARGUMENT=$(get_number "$OPTION_ARGUMENT")
+                
+                
+                
+                
+                
+                
+                
+                
                 echo "command_argument - $OPTION_ARGUMENT"
                 
         elif ( echo "$OPTION_ARGUMENT" | grep "^[A-Za-z]=$" &> /dev/null ); then
