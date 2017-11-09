@@ -16,7 +16,7 @@ fi
 ############################################################
 FUNCTION_DIR="/usr/local/lib"
 
-HOLD_FUNCTION="myfn_standard myfn_option myfn_tool"
+HOLD_FUNCTION="myfn_standard"
 
 ############################################################
 #
