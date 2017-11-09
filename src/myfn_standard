@@ -291,22 +291,20 @@ get_option()
                 
         fi
         
+        # 检测命令参数
+        for (( COMMAND_ARGNUM = ($#-COMMAND_ARGUMENT_NUMBER+1); COMMAND_ARGNUM <= $#; COMMAND_ARGNUM++ )); do
+                
+                if ( echo "${!COMMAND_ARGNUM}" | grep "^-" &> /dev/null ); then
+                        return 0
+                fi
+                
+        done
+        
         # 获取命令参数
         if [[ "$OPTION_ARGUMENT_TYPE" == "command_argument" ]]; then
                 
-                # 获得某个命令参数
                 FRONT_NUMBER=$(( $#-OPTION_ARGUMENT+1 ))
-                
                 COMMAND_ARGUMENT="${!FRONT_NUMBER}"
-                
-                # 检测所有命令参数
-                for (( COMMAND_ARGNUM = ($#-COMMAND_ARGUMENT_NUMBER+1); COMMAND_ARGNUM <= $#; COMMAND_ARGNUM++ )); do
-                        
-                        if ( echo "${!COMMAND_ARGNUM}" | grep "^-" &> /dev/null ); then
-                                return 0
-                        fi
-                        
-                done
                 
                 echo "$COMMAND_ARGUMENT"
                 
