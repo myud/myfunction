@@ -244,18 +244,23 @@ get_number()
 ############################################################
 get_option()
 {
+        # 变量
         local COMMAND_ARGUMENT_NUMBER="$1"
         local OPTION_ARGUMENT="$2"
         local OPTION_ARGUMENT_TYPE=
         
+        local OPTION=
+        local NUM="0"
+        local NUMBER=
         
+        # 检测 $1
         COMMAND_ARGUMENT_NUMBER=$(get_number "$COMMAND_ARGUMENT_NUMBER")
         
         if [[ -z "$COMMAND_ARGUMENT_NUMBER" ]] || [[ "$COMMAND_ARGUMENT_NUMBER" > "$(( $#-2 ))" ]]; then
                 echo_error "Error: unrecognized option ${1}"
         fi
         
-        
+        # 检测 $2
         if   ( echo "$OPTION_ARGUMENT" | grep "^[A-Za-z]$" &> /dev/null ); then
                 
                 OPTION_ARGUMENT_TYPE="short_option"
@@ -282,34 +287,29 @@ get_option()
                 
         fi
         
+        #
+        NUMBER=$(( $#-COMMAND_ARGUMENT_NUMBER ))
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        for OPTION in "$@"; do
+                
+                NUM=$(( NUM+1 ))
+                
+                if [[ "$NUM" < "3" ]] || [[ "$NUM" > "$NUMBER" ]]; then
+                        continue 1
+                fi
+                
+                
+                
+                
+                
+                
+                echo "$OPTION"
+                
+                
+                
+                
+                
+        done
 }
 
 
