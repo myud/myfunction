@@ -253,7 +253,31 @@ get_option()
                 echo_error "Error: unrecognized option ${1}"
         fi
         
-        
+        if   ( echo "$OPTION_ARGUMENT" | grep "^[A-Za-z]$" &> /dev/null ); then
+                
+                echo "short_option     - $OPTION_ARGUMENT"
+                
+        elif ( echo "$OPTION_ARGUMENT" | grep "^[A-Za-z][A-Za-z0-9][A-Za-z0-9]*$" &> /dev/null ); then
+                
+                echo "long_option      - $OPTION_ARGUMENT"
+                
+        elif ( echo "$OPTION_ARGUMENT" | grep "^[0-9][0-9]*$" &> /dev/null ); then
+                
+                echo "command_argument - $OPTION_ARGUMENT"
+                
+        elif ( echo "$OPTION_ARGUMENT" | grep "^[A-Za-z]=$" &> /dev/null ); then
+                
+                echo "short_argument   - $OPTION_ARGUMENT"
+                
+        elif ( echo "$OPTION_ARGUMENT" | grep "^[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=$" &> /dev/null ); then
+                
+                echo "long_argument    - $OPTION_ARGUMENT"
+                
+        else
+                
+                echo_error "Error: unrecognized option ${2}"
+                
+        fi
         
         
         
