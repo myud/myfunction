@@ -270,6 +270,9 @@ get_option()
         local OOA="$OPTION_OR_ARGUMENT"
         local OOA_TYPE=
         
+        local OPTION=
+        local NUM="0"
+        
         # 检测 $1, 0 <= $1 <= 命令选项的个数
         if [[ -z "$CAN" ]] || [[ "$CAN" > "$(( $#-2 ))" ]]; then
                 echo_error "Error: unrecognized option ${1}"
@@ -293,6 +296,23 @@ get_option()
         # 区域一:    1                  ~    2
         # 区域二:    3                  ~    $(( $#-CAN ))
         # 区域三:    $(( $#-CAN+1 ))    ~    $#
+        
+        # 检测选项或参数
+        for OPTION in "$@"; do
+                
+                NUM=$(( NUM+1 ))
+                
+                if [[ "$NUM" < "3" ]]; then
+                        continue 1
+                fi
+                
+                if [[ "$NUM" > "$(( $#-CAN ))" ]]; then
+                        3
+                fi
+                
+                2
+                
+        done
 }
 
 
