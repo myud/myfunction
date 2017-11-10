@@ -289,6 +289,10 @@ get_option()
         else
                 echo_error "Error: unrecognized option ${2}"
         fi
+        
+        # 区域一:    1                  ~    2
+        # 区域二:    3                  ~    $(( $#-CAN ))
+        # 区域三:    $(( $#-CAN+1 ))    ~    $#
 }
 
 
