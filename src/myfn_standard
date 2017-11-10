@@ -366,7 +366,8 @@ get_option()
                 fi
                 
                 if [[ "$OOA_TYPE" == "long_option" ]] && ( echo "$OPTION" | grep "^--${OOA}$" &> /dev/null ); then
-                        echo "$OPTION"
+                        echo "$OOA"
+                        break 1
                 fi
                 
                 if [[ "$OOA_TYPE" == "" ]]; then
@@ -380,8 +381,6 @@ get_option()
                 if [[ "$OOA_TYPE" == "" ]]; then
                         :
                 fi
-                
-                echo $NUM
                 
         done
 }
