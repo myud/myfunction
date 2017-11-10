@@ -327,7 +327,7 @@ get_option()
                         
                         if ( ! echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ) \
                         && ( ! echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*$" &> /dev/null ) \
-                        && ( ! echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=." &> /dev/null ); then
+                        && ( ! echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=[^=]" &> /dev/null ); then
                                 
                                 echo_error "Error: unrecognized option ${OPTION}"
                         fi
