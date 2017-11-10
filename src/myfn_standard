@@ -279,6 +279,7 @@ get_option()
         local OPTION=
         local NUM=
         local NUM_MINUS=
+        local NUM_PLUS=
         
         # 检测 $1, 0 <= $1 <= 命令选项的个数
         if [[ -z "$CAN" ]] || [[ "$CAN" > "$(( $#-2 ))" ]]; then
@@ -375,8 +376,24 @@ get_option()
                         break 1
                 fi
                 
-                if [[ "$OOA_TYPE" == "" ]]; then
-                        :
+                if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
+                        
+                        NUM_PLUS=$(( NUM+1 ))
+                        
+                        if (( NUM_PLUS <= ($#-CAN) )) && ( echo "${!NUM_PLUS}" | grep -v "^-" &> /dev/null ); then
+                                
+                                if ( echo "$OPTION" | grep "${OOA}[A-Za-z]" &> /dev/null ); then
+                                        echo "$OOA"
+                                        break 1
+                                fi
+                                
+                        else
+                                if ( echo "$OPTION" | grep "$OOA" &> /dev/null ); then
+                                        echo "$OOA"
+                                        break 1
+                                fi
+                        fi
+                        
                 fi
                 
                 if [[ "$OOA_TYPE" == "" ]]; then
