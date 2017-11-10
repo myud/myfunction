@@ -355,9 +355,31 @@ get_option()
         fi
         
         #
+        NUM="0"
+        
         for OPTION in "$@"; do
                 
+                NUM=$(( NUM+1 ))
                 
+                if [[ "$NUM" < "3" ]] || [[ "$NUM" > "$(( $#-CAN ))" ]]; then
+                        continue 1
+                fi
+                
+                if [[ "$OOA_TYPE" == "" ]]; then
+                        :
+                fi
+                
+                if [[ "$OOA_TYPE" == "" ]]; then
+                        :
+                fi
+                
+                if [[ "$OOA_TYPE" == "" ]]; then
+                        :
+                fi
+                
+                if [[ "$OOA_TYPE" == "" ]]; then
+                        :
+                fi
                 
         done
 }
