@@ -272,6 +272,7 @@ get_option()
         
         local OPTION=
         local NUM="0"
+        local NUM_MINUS=
         
         # 检测 $1, 0 <= $1 <= 命令选项的个数
         if [[ -z "$CAN" ]] || [[ "$CAN" > "$(( $#-2 ))" ]]; then
@@ -310,9 +311,31 @@ get_option()
                         if ( echo "$OPTION" | grep "^-" &> /dev/null ); then
                                 echo_error "Error: unrecognized option ${OPTION}"
                         fi
+                        
+                        continue 1
                 fi
                 
-                
+                if ( echo "$OPTION" | grep "^-" &> /dev/null ); then
+                        
+                        if   ( echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
+                                :
+                        elif ( echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*$" &> /dev/null ); then
+                                :
+                        elif ( echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=." &> /dev/null ); then
+                                :
+                        else
+                                echo_error "Error: unrecognized option ${OPTION}"
+                        fi
+                        
+                else
+                        
+                        NUM_MINUS=$(( NUM-1 ))
+                        
+                        if ( ! echo "${!NUM_MINUS} | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null" ); then
+                                echo_error "Error: unrecognized option ${OPTION}"
+                        fi
+                        
+                fi
                 
         done
 }
