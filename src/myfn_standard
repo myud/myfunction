@@ -307,10 +307,12 @@ get_option()
                 fi
                 
                 if [[ "$NUM" > "$(( $#-CAN ))" ]]; then
-                        3
+                        if ( echo "$OPTION" | grep "^-" &> /dev/null ); then
+                                echo_error "Error: unrecognized option ${OPTION}"
+                        fi
                 fi
                 
-                2
+                
                 
         done
 }
