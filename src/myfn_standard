@@ -331,7 +331,7 @@ get_option()
                         
                         NUM_MINUS=$(( NUM-1 ))
                         
-                        if ( ! echo "${!NUM_MINUS} | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null" ); then
+                        if ( ! echo "${!NUM_MINUS}" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
                                 echo_error "Error: unrecognized option ${OPTION}"
                         fi
                         
