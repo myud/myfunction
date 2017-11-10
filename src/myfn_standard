@@ -256,8 +256,10 @@ get_number()
 get_option()
 {
         # 变量
-        local COMMAND_ARGUMENT_NUMBER=
-        local OPTION_OR_ARGUMENT=
+        local COMMAND_ARGUMENT_NUMBER=$(get_number "$1")
+        local OPTION_OR_ARGUMENT="$2"
+        local CAN="$COMMAND_ARGUMENT_NUMBER"
+        local OOA="$OPTION_OR_ARGUMENT"
 }
 
 
