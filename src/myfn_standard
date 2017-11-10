@@ -257,7 +257,7 @@ get_option()
 {
         # 变量
         local COMMAND_ARGUMENT_NUMBER=
-        local OPTION_ARGUMENT=
+        local OPTION_OR_ARGUMENT=
 }
 
 
