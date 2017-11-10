@@ -263,6 +263,10 @@ get_option()
                 echo_error "Error: ${FUNCNAME} missing operand"
         fi
         
+        if (( $# > 9 )); then
+                echo_error "Error: ${FUNCNAME} has too many operands"
+        fi
+        
         # 变量
         local COMMAND_ARGUMENT_NUMBER=$(get_number "$1")
         local OPTION_OR_ARGUMENT="$2"
