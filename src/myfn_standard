@@ -260,6 +260,11 @@ get_option()
         local OPTION_OR_ARGUMENT="$2"
         local CAN="$COMMAND_ARGUMENT_NUMBER"
         local OOA="$OPTION_OR_ARGUMENT"
+        
+        # 检测 $1
+        if [[ -z "$CAN" ]] || [[ "$CAN" > "$(( $#-2 ))" ]]; then
+                echo_error "Error: unrecognized option ${1}"
+        fi
 }
 
 
