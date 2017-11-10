@@ -277,7 +277,7 @@ get_option()
         local OOA_NUM=
         
         local OPTION=
-        local NUM="0"
+        local NUM=
         local NUM_MINUS=
         
         # 检测 $1, 0 <= $1 <= 命令选项的个数
@@ -305,6 +305,8 @@ get_option()
         # 区域三:    $(( $#-CAN+1 ))    ~    $#
         
         # 检测选项或参数
+        NUM="0"
+        
         for OPTION in "$@"; do
                 
                 NUM=$(( NUM+1 ))
@@ -351,6 +353,13 @@ get_option()
                 return 0
                 
         fi
+        
+        #
+        for OPTION in "$@"; do
+                
+                
+                
+        done
 }
 
 
