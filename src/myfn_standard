@@ -237,104 +237,27 @@ get_number()
 
 ############################################################
 #
-#       013 - 
+#       013 - 获取选项或参数
 #
 #       get_option  "命令参数的个数"  "选项或参数"  "$@"
 #
 ############################################################
+
+# command [ -abc | -a -b -c | --file --dir | -f a.txt -d /root | --file=a.txt --dir=/root ] [ URL1 URL2 ... ]
+
+# get_option "[0-9]" "[1-9]" "$@"        # 获取倒数第几个命令参数        成功返回该参数, 失败则返回空值
+
+# get_option "[0-9]" "f"     "$@"        # 获取某个短选项                成功返回该选项, 失败则返回空值
+# get_option "[0-9]" "f="    "$@"        # 获取某个短选项的参数          成功返回该参数, 失败则返回空值
+
+# get_option "[0-9]" "file"  "$@"        # 获取某个长选项                成功返回该选项, 失败则返回空值
+# get_option "[0-9]" "file=" "$@"        # 获取某个长选项的参数          成功返回该参数, 失败则返回空值
+
 get_option()
 {
         # 变量
-        local COMMAND_ARGUMENT_NUMBER="$1"
-        local OPTION_ARGUMENT="$2"
-        local OPTION_ARGUMENT_TYPE=
-        
-        local OPTION=
-        local NUM="0"
-        local NUMBER=
-        local FRONT_NUMBER=
-        
-        local COMMAND_ARGUMENT=
-        local COMMAND_ARGNUM=
-        
-        # 检测 $1
-        COMMAND_ARGUMENT_NUMBER=$(get_number "$COMMAND_ARGUMENT_NUMBER")
-        
-        if [[ -z "$COMMAND_ARGUMENT_NUMBER" ]] || [[ "$COMMAND_ARGUMENT_NUMBER" > "$(( $#-2 ))" ]]; then
-                echo_error "Error: unrecognized option ${1}"
-        fi
-        
-        # 检测 $2
-        if   ( echo "$OPTION_ARGUMENT" | grep "^[A-Za-z]$" &> /dev/null ); then
-                
-                OPTION_ARGUMENT_TYPE="short_option"
-                
-        elif ( echo "$OPTION_ARGUMENT" | grep "^[A-Za-z][A-Za-z0-9][A-Za-z0-9]*$" &> /dev/null ); then
-                
-                OPTION_ARGUMENT_TYPE="long_option"
-                
-        elif ( echo "$OPTION_ARGUMENT" | grep "^[1-9][0-9]*$" &> /dev/null ) && (( OPTION_ARGUMENT <= COMMAND_ARGUMENT_NUMBER )); then
-                
-                OPTION_ARGUMENT_TYPE="command_argument"
-                
-        elif ( echo "$OPTION_ARGUMENT" | grep "^[A-Za-z]=$" &> /dev/null ); then
-                
-                OPTION_ARGUMENT_TYPE="short_argument"
-                
-        elif ( echo "$OPTION_ARGUMENT" | grep "^[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=$" &> /dev/null ); then
-                
-                OPTION_ARGUMENT_TYPE="long_argument"
-                
-        else
-                
-                echo_error "Error: unrecognized option ${2}"
-                
-        fi
-        
-        # 检测命令参数
-        for (( COMMAND_ARGNUM = ($#-COMMAND_ARGUMENT_NUMBER+1); COMMAND_ARGNUM <= $#; COMMAND_ARGNUM++ )); do
-                
-                if ( echo "${!COMMAND_ARGNUM}" | grep "^-" &> /dev/null ); then
-                        return 0
-                fi
-                
-        done
-        
-        # 获取命令参数
-        if [[ "$OPTION_ARGUMENT_TYPE" == "command_argument" ]]; then
-                
-                FRONT_NUMBER=$(( $#-OPTION_ARGUMENT+1 ))
-                COMMAND_ARGUMENT="${!FRONT_NUMBER}"
-                
-                echo "$COMMAND_ARGUMENT"
-                
-                return 0
-                
-        fi
-        
-        #
-        NUMBER=$(( $#-COMMAND_ARGUMENT_NUMBER ))
-        
-        for OPTION in "$@"; do
-                
-                NUM=$(( NUM+1 ))
-                
-                if [[ "$NUM" < "3" ]] || [[ "$NUM" > "$NUMBER" ]]; then
-                        continue 1
-                fi
-                
-                
-                
-                
-                
-                
-                echo "$OPTION"
-                
-                
-                
-                
-                
-        done
+        local COMMAND_ARGUMENT_NUMBER=
+        local OPTION_ARGUMENT=
 }
 
 
