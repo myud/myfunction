@@ -381,7 +381,10 @@ get_option()
                         break 1
                 fi
                 
-                
+                if [[ "$OOA_TYPE" == "long_argument" ]] && ( echo "$OPTION" | grep "^--${OOA}=[^=]" &> /dev/null ); then
+                        echo "$OPTION" | cut -d= -f 2-
+                        break 1
+                fi
                 
         done
 }
