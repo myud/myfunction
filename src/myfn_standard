@@ -317,7 +317,7 @@ get_option()
                 
                 if [[ "$NUM" > "$(( $#-CAN ))" ]]; then
                         if ( echo "$OPTION" | grep "^-" &> /dev/null ); then
-                                echo_error "Error: unrecognized option ${OPTION}"
+                                echo_error "Error: missing operand"
                         fi
                         
                         continue 1
