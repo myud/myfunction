@@ -275,7 +275,10 @@ get_option()
         local CAN="$COMMAND_ARGUMENT_NUMBER"
         local OOA="$OPTION_OR_ARGUMENT"
         
-        
+        # 检测 $1, 0 <= $1 <= 命令选项的个数
+        if [[ -z "$CAN" ]] || [[ "$CAN" > "$(( $#-2 ))" ]]; then
+                echo_error "Error: missing operand"
+        fi
         
         
         
@@ -349,11 +352,7 @@ get_option()
         exit 0
         
         # 变量
-        local COMMAND_ARGUMENT_NUMBER=$(get_number "$1")
-        local OPTION_OR_ARGUMENT="$2"
         
-        local CAN="$COMMAND_ARGUMENT_NUMBER"
-        local OOA="$OPTION_OR_ARGUMENT"
         local OOA_TYPE=
         local OOA_NUM=
         
