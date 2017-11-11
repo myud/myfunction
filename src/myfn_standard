@@ -415,6 +415,11 @@ get_option()
                                         break 1
                                 fi
                                 
+                                if [[ "$OOA_TYPE" == "short_argument" ]] && ( echo "$OPTION" | grep "${OOA}$" &> /dev/null ); then
+                                        echo "${!NUM_PLUS}"
+                                        break 1
+                                fi
+                                
                         else
                                 
                                 if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "$OOA" &> /dev/null ); then
