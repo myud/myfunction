@@ -314,8 +314,8 @@ get_option()
         OOA=$(echo "$OOA" | sed "s/=$//g")
         
         if [[ -n "$LONG_OPTION_LIST" ]]; then
-                LONG_OPTION_LIST=$(echo "$LONG_OPTION_LIST" | sed "s/^[ \t][ \t]*//g" | sed "s/[ \t][ \t]*$//g")
-                LONG_OPTION_LIST=$(echo "$LONG_OPTION_LIST" | sed "s/[ \t][ \t]*/\$\|\^/g")
+                LONG_OPTION_LIST=$(echo "$LONG_OPTION_LIST" | sed "s/\-//g" | sed "s/^[ \t][ \t]*//g" | sed "s/[ \t][ \t]*$//g")
+                LONG_OPTION_LIST=$(echo "$LONG_OPTION_LIST" | sed "s/\-//g" | sed "s/[ \t][ \t]*/\$\|\^/g")
         fi
         
         if [[ -n "$SHORT_OPTION_LIST" ]]; then
