@@ -294,7 +294,7 @@ get_option()
         elif ( echo "$OOA" | grep "^[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=$" &> /dev/null ); then
                 OOA_TYPE="long_argument"
         else
-                echo_error "Error: unrecognized option ${2}"
+                echo_error "Error: ${FUNCNAME}: unrecognized option ${2}"
         fi
         
         
