@@ -281,6 +281,9 @@ get_option()
         
         local OOA_TYPE=
         
+        local OPTION=
+        local NUM=
+        
         # 检测 $1, 0 <= $1 <= 命令所有选项的个数
         if [[ -z "$CAN" ]] || [[ "$CAN" > "$(( $#-2 ))" ]]; then
                 echo_error "Error: missing operand"
@@ -301,7 +304,45 @@ get_option()
                 echo_error "Error: ${FUNCNAME}: unrecognized option ${OOA}"
         fi
         
+        # 检测选项或参数
+        NUM="0"
         
+        for OPTION in "$@"; do
+                
+                NUM=$(( NUM+1 ))
+                
+                if [[ "$NUM" < "3" ]]; then
+                        continue 1
+                fi
+                
+                if [[ "$NUM" > "$(( $#-CAN ))" ]]; then
+                        if ( echo "$OPTION" | grep "^-" &> /dev/null ); then
+                                echo_error "Error: unrecognized option ${OPTION}"
+                        fi
+                        
+                        continue 1
+                fi
+                
+                if ( echo "$OPTION" | grep "^-" &> /dev/null ); then
+                        
+                        if ( ! echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ) \
+                        && ( ! echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*$" &> /dev/null ) \
+                        && ( ! echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=[^=]" &> /dev/null ); then
+                                
+                                echo_error "Error: unrecognized option ${OPTION}"
+                        fi
+                        
+                else
+                        
+                        NUM_MINUS=$(( NUM-1 ))
+                        
+                        if ( ! echo "${!NUM_MINUS}" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
+                                echo_error "Error: unrecognized option ${OPTION}"
+                        fi
+                        
+                fi
+                
+        done
         
         
         
@@ -375,8 +416,7 @@ get_option()
         
         local OOA_NUM=
         
-        local OPTION=
-        local NUM=
+        
         local NUM_MINUS=
         local NUM_PLUS=
         
@@ -386,45 +426,7 @@ get_option()
         
         
         
-        # 检测选项或参数
-        NUM="0"
         
-        for OPTION in "$@"; do
-                
-                NUM=$(( NUM+1 ))
-                
-                if [[ "$NUM" < "3" ]]; then
-                        continue 1
-                fi
-                
-                if [[ "$NUM" > "$(( $#-CAN ))" ]]; then
-                        if ( echo "$OPTION" | grep "^-" &> /dev/null ); then
-                                echo_error "Error: unrecognized option ${OPTION}"
-                        fi
-                        
-                        continue 1
-                fi
-                
-                if ( echo "$OPTION" | grep "^-" &> /dev/null ); then
-                        
-                        if ( ! echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ) \
-                        && ( ! echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*$" &> /dev/null ) \
-                        && ( ! echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=[^=]" &> /dev/null ); then
-                                
-                                echo_error "Error: unrecognized option ${OPTION}"
-                        fi
-                        
-                else
-                        
-                        NUM_MINUS=$(( NUM-1 ))
-                        
-                        if ( ! echo "${!NUM_MINUS}" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
-                                echo_error "Error: unrecognized option ${OPTION}"
-                        fi
-                        
-                fi
-                
-        done
         
         # 获取命令参数
         if [[ "$OOA_TYPE" == "command_argument" ]]; then
