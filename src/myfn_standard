@@ -280,10 +280,12 @@ get_option()
         local OOA="$OPTION_OR_ARGUMENT"
         
         local OOA_TYPE=
+        local OOA_NUM=
         
         local OPTION=
         local NUM=
         local NUM_MINUS=
+        local NUM_PLUS=
         
         # 检测 $1, 0 <= $1 <= 命令所有选项的个数
         if [[ -z "$CAN" ]] || [[ "$CAN" > "$(( $#-2 ))" ]]; then
@@ -344,90 +346,6 @@ get_option()
                 fi
                 
         done
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        exit 0
-        
-        # 变量
-        
-        
-        local OOA_NUM=
-        
-        
-        
-        local NUM_PLUS=
-        
-        
-        
-        
-        
-        
-        
-        
         
         # 获取命令参数
         if [[ "$OOA_TYPE" == "command_argument" ]]; then
