@@ -283,6 +283,7 @@ get_option()
         
         local OPTION=
         local NUM=
+        local NUM_MINUS=
         
         # 检测 $1, 0 <= $1 <= 命令所有选项的个数
         if [[ -z "$CAN" ]] || [[ "$CAN" > "$(( $#-2 ))" ]]; then
@@ -417,7 +418,7 @@ get_option()
         local OOA_NUM=
         
         
-        local NUM_MINUS=
+        
         local NUM_PLUS=
         
         
