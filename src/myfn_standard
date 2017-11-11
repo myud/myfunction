@@ -347,6 +347,12 @@ get_option()
                         
                 fi
                 
+                if [[ "$OOA_TYPE" == "long_option" ]] && ( echo "$OPTION" | grep "^--${OOA}=[^=]" &> /dev/null ); then
+                        echo_error "Error: unrecognized option ${OPTION}"
+                fi
+                
+                
+                
         done
         
         # 获取命令参数
@@ -374,6 +380,8 @@ get_option()
                         echo "$OOA"
                         break 1
                 fi
+                
+                
                 
         done
 }
