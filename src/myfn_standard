@@ -269,8 +269,11 @@ get_option()
                 echo_error "Error: too many operands"
         fi
         
-        
-        
+        # 变量
+        local COMMAND_ARGUMENT_NUMBER=$(get_number "$1")
+        local OPTION_OR_ARGUMENT="$2"
+        local CAN="$COMMAND_ARGUMENT_NUMBER"
+        local OOA="$OPTION_OR_ARGUMENT"
         
         
         
@@ -344,24 +347,6 @@ get_option()
         
         
         exit 0
-        # 检测该函数或者定义该函数的默认值
-        local ARG1="$1"
-        local ARG2="$2"
-        
-        if [[ -z "$ARG1" ]] || [[ -z "$ARG2" ]]; then
-                echo_error "Error: ${FUNCNAME}: missing operand"
-        fi
-        
-        # 检测调用该函数的脚本或函数
-        local ARG3="$3"
-        
-        if [[ -z "$ARG3" ]]; then
-                echo_error "Error: missing operand"
-        fi
-        
-        if (( $# > 9 )); then
-                echo_error "Error: too many operands"
-        fi
         
         # 变量
         local COMMAND_ARGUMENT_NUMBER=$(get_number "$1")
