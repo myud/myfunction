@@ -351,6 +351,10 @@ get_option()
                         echo_error "Error: unrecognized option ${OPTION}"
                 fi
                 
+                if [[ "$OOA_TYPE" == "long_argument" ]] && ( echo "$OPTION" | grep "^--${OOA}$" &> /dev/null ); then
+                        echo_error "Error: unrecognized option ${OPTION}"
+                fi
+                
                 
                 
         done
@@ -385,6 +389,8 @@ get_option()
                         echo "$OPTION" | cut -d= -f 2-
                         break 1
                 fi
+                
+                
                 
         done
 }
