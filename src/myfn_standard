@@ -8,6 +8,8 @@
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 MYFN_LIST=
 START_TIME=$(date "+%s")
+LONG_OPTION_LIST=
+SHORT_OPTION_LIST=
 
 
 ############################################################
@@ -286,6 +288,7 @@ get_option()
         local NUM=
         local NUM_MINUS=
         local NUM_PLUS=
+        local OPTION_TMPVAR=
         
         # 检测 $1, 0 <= $1 <= 命令所有选项的个数
         if [[ -z "$CAN" ]] || [[ "$CAN" > "$(( $#-2 ))" ]]; then
@@ -307,7 +310,17 @@ get_option()
                 echo_error "Error: ${FUNCNAME}: unrecognized option ${OOA}"
         fi
         
+        #
         OOA=$(echo "$OOA" | sed "s/=$//g")
+        
+        if [[ -n "$LONG_OPTION_LIST" ]]; then
+                LONG_OPTION_LIST=$(echo "$LONG_OPTION_LIST" | sed "s/^[ \t][ \t]*//g" | sed "s/[ \t][ \t]*$//g")
+                LONG_OPTION_LIST=$(echo "$LONG_OPTION_LIST" | sed "s/[ \t][ \t]*/\$\|\^/g")
+        fi
+        
+        if [[ -n "$SHORT_OPTION_LIST" ]]; then
+                SHORT_OPTION_LIST=$(echo "$SHORT_OPTION_LIST" | sed "s/[ \t][ \t]*//g")
+        fi
         
         # 检测选项或参数
         NUM="0"
@@ -342,6 +355,24 @@ get_option()
                         NUM_MINUS=$(( NUM-1 ))
                         
                         if (( NUM_MINUS < 3 )) || ( ! echo "${!NUM_MINUS}" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
+                                echo_error "Error: unrecognized option ${OPTION}"
+                        fi
+                        
+                fi
+                
+                if [[ -n "$LONG_OPTION_LIST" ]] && ( echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*" &> /dev/null ); then
+                        
+                        OPTION_TMPVAR=$(echo "$OPTION" | cut -d= -f 1 | sed "s/\-//g")
+                        
+                        if ( echo "$OPTION_TMPVAR" | grep -vE "^${LONG_OPTION_LIST}$" &> /dev/null ); then
+                                echo_error "Error: unrecognized option ${OPTION}"
+                        fi
+                        
+                fi
+                
+                if [[ -n "$SHORT_OPTION_LIST" ]] && ( echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
+                        
+                        if ( ! echo "$OPTION" | grep "^-[${SHORT_OPTION_LIST}][${SHORT_OPTION_LIST}]*$" &> /dev/null ); then
                                 echo_error "Error: unrecognized option ${OPTION}"
                         fi
                         
