@@ -376,28 +376,32 @@ get_option()
                         break 1
                 fi
                 
-                if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
+                if ( echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
                         
+                        OOA=$(echo "$OOA" | sed "s/=$//g")
                         NUM_PLUS=$(( NUM+1 ))
                         
                         if (( NUM_PLUS <= ($#-CAN) )) && ( echo "${!NUM_PLUS}" | grep -v "^-" &> /dev/null ); then
                                 
-                                if ( echo "$OPTION" | grep "${OOA}[A-Za-z]" &> /dev/null ); then
+                                if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "${OOA}[A-Za-z]" &> /dev/null ); then
                                         echo "$OOA"
                                         break 1
                                 fi
                                 
+                                if [[ "$OOA_TYPE" == "short_argument" ]] && ( echo "$OPTION" | grep "$OOA$" &> /dev/null ); then
+                                        echo "${!NUM_PLUS}"
+                                        break 1
+                                fi
+                                
                         else
-                                if ( echo "$OPTION" | grep "$OOA" &> /dev/null ); then
+                                
+                                if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "$OOA" &> /dev/null ); then
                                         echo "$OOA"
                                         break 1
                                 fi
+                                
                         fi
                         
-                fi
-                
-                if [[ "$OOA_TYPE" == "" ]]; then
-                        :
                 fi
                 
         done
