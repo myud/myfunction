@@ -257,7 +257,13 @@ get_option()
         # 将错误分为该函数的错误和调用该函数的脚本的错误, 如果属于两者归于脚本错误
         
         # 检测该函数或者定义该函数的默认值
+        local ARG1="$1"
+        local ARG2="$2"
+        local ARG3="$3"
         
+        if [[ -z "$ARG1" ]] || [[ -z "$ARG2" ]] || [[ -z "$ARG3" ]]; then
+                echo_error "Error: missing operand"
+        fi
         
         
         
@@ -335,10 +341,7 @@ get_option()
         
         
         
-        
-        
-        
-        
+        exit 0
         # 检测该函数或者定义该函数的默认值
         local ARG1="$1"
         local ARG2="$2"
