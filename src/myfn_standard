@@ -265,7 +265,9 @@ get_option()
                 echo_error "Error: missing operand"
         fi
         
-        
+        if (( $# > 9 )); then
+                echo_error "Error: too many operands"
+        fi
         
         
         
