@@ -307,6 +307,8 @@ get_option()
                 echo_error "Error: ${FUNCNAME}: unrecognized option ${OOA}"
         fi
         
+        OOA=$(echo "$OOA" | sed "s/=$//g")
+        
         # 检测选项或参数
         NUM="0"
         
@@ -371,39 +373,6 @@ get_option()
                 if [[ "$OOA_TYPE" == "long_option" ]] && ( echo "$OPTION" | grep "^--${OOA}$" &> /dev/null ); then
                         echo "$OOA"
                         break 1
-                fi
-                
-                if [[ "$OOA_TYPE" == "long_argument" ]] && ( echo "$OPTION" | grep "^--${OOA}[^=]" &> /dev/null ); then
-                        echo "$OPTION" | cut -d= -f 2-
-                        break 1
-                fi
-                
-                if ( echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
-                        
-                        OOA=$(echo "$OOA" | sed "s/=$//g")
-                        NUM_PLUS=$(( NUM+1 ))
-                        
-                        if (( NUM_PLUS <= ($#-CAN) )) && ( echo "${!NUM_PLUS}" | grep -v "^-" &> /dev/null ); then
-                                
-                                if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "${OOA}[A-Za-z]" &> /dev/null ); then
-                                        echo "$OOA"
-                                        break 1
-                                fi
-                                
-                                if [[ "$OOA_TYPE" == "short_argument" ]] && ( echo "$OPTION" | grep "$OOA$" &> /dev/null ); then
-                                        echo "${!NUM_PLUS}"
-                                        break 1
-                                fi
-                                
-                        else
-                                
-                                if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "$OOA" &> /dev/null ); then
-                                        echo "$OOA"
-                                        break 1
-                                fi
-                                
-                        fi
-                        
                 fi
                 
         done
