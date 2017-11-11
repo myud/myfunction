@@ -254,17 +254,23 @@ get_number()
 
 get_option()
 {
-        # 函数的默认值或报错
+        # 检测该函数或者定义该函数的默认值
         local ARG1="$1"
         local ARG2="$2"
+        
+        if [[ -z "$ARG1" ]] || [[ -z "$ARG2" ]]; then
+                echo_error "Error: ${FUNCNAME}: missing operand"
+        fi
+        
+        # 检测调用该函数的脚本或函数
         local ARG3="$3"
         
-        if [[ -z "$ARG1" ]] || [[ -z "$ARG2" ]] || [[ -z "$ARG3" ]]; then
-                echo_error "Error: ${FUNCNAME} missing operand"
+        if [[ -z "$ARG3" ]]; then
+                echo_error "Error: missing operand"
         fi
         
         if (( $# > 9 )); then
-                echo_error "Error: ${FUNCNAME} has too many operands"
+                echo_error "Error: too many operands"
         fi
         
         # 变量
