@@ -275,12 +275,27 @@ get_option()
         local CAN="$COMMAND_ARGUMENT_NUMBER"
         local OOA="$OPTION_OR_ARGUMENT"
         
+        local OOA_TYPE=
+        
         # 检测 $1, 0 <= $1 <= 命令所有选项的个数
         if [[ -z "$CAN" ]] || [[ "$CAN" > "$(( $#-2 ))" ]]; then
                 echo_error "Error: missing operand"
         fi
         
-        
+        # 检测 $2 并定义 OOA_TYPE, 1 <= $2 <= $1
+        if   ( echo "$OOA" | grep "^[A-Za-z]$" &> /dev/null ); then
+                OOA_TYPE="short_option"
+        elif ( echo "$OOA" | grep "^[A-Za-z][A-Za-z0-9][A-Za-z0-9]*$" &> /dev/null ); then
+                OOA_TYPE="long_option"
+        elif ( echo "$OOA" | grep "^[1-9][0-9]*$" &> /dev/null ) && (( OOA <= CAN )); then
+                OOA_TYPE="command_argument"
+        elif ( echo "$OOA" | grep "^[A-Za-z]=$" &> /dev/null ); then
+                OOA_TYPE="short_argument"
+        elif ( echo "$OOA" | grep "^[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=$" &> /dev/null ); then
+                OOA_TYPE="long_argument"
+        else
+                echo_error "Error: unrecognized option ${2}"
+        fi
         
         
         
@@ -353,7 +368,7 @@ get_option()
         
         # 变量
         
-        local OOA_TYPE=
+        
         local OOA_NUM=
         
         local OPTION=
@@ -361,25 +376,9 @@ get_option()
         local NUM_MINUS=
         local NUM_PLUS=
         
-        # 检测 $1, 0 <= $1 <= 命令选项的个数
-        if [[ -z "$CAN" ]] || [[ "$CAN" > "$(( $#-2 ))" ]]; then
-                echo_error "Error: unrecognized option ${1}"
-        fi
         
-        # 检测 $2 并定义 OOA_TYPE, 1 <= $2 <= $1
-        if   ( echo "$OOA" | grep "^[A-Za-z]$" &> /dev/null ); then
-                OOA_TYPE="short_option"
-        elif ( echo "$OOA" | grep "^[A-Za-z][A-Za-z0-9][A-Za-z0-9]*$" &> /dev/null ); then
-                OOA_TYPE="long_option"
-        elif ( echo "$OOA" | grep "^[1-9][0-9]*$" &> /dev/null ) && (( OOA <= CAN )); then
-                OOA_TYPE="command_argument"
-        elif ( echo "$OOA" | grep "^[A-Za-z]=$" &> /dev/null ); then
-                OOA_TYPE="short_argument"
-        elif ( echo "$OOA" | grep "^[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=$" &> /dev/null ); then
-                OOA_TYPE="long_argument"
-        else
-                echo_error "Error: unrecognized option ${2}"
-        fi
+        
+        
         
         # 区域一:    1                  ~    2
         # 区域二:    3                  ~    $(( $#-CAN ))
