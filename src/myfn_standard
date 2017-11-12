@@ -209,6 +209,10 @@ config_file()
         local FILE="$3"
         local LINE=
         
+        if [[ -z "$KEY" ]] || [[ -z "$VALUE" ]] || [[ -z "$FILE" ]]; then
+                echo_error "Error: ${FUNCNAME}: missing operand"
+        fi
+        
         if [[ -s "$FILE" ]]; then
                 
                 while read LINE; do
