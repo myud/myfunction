@@ -493,7 +493,6 @@ get_option()
 #
 ############################################################
 if [[ -n "$MYFN_LIST" ]]; then
-        
         for MYFN_FILE in ${MYFN_LIST}; do
                 
                 MYFN_PATH="/usr/local/lib/${MYFN_FILE}"
@@ -505,5 +504,4 @@ if [[ -n "$MYFN_LIST" ]]; then
                 fi
                 
         done
-        
 fi
