@@ -275,7 +275,7 @@ get_option()
                 echo_error "Error: too many operands"
         fi
         
-        # 变量
+        # 定义变量
         local COMMAND_ARGUMENT_NUMBER=$(get_number "$1")
         local OPTION_OR_ARGUMENT="$2"
         local CAN="$COMMAND_ARGUMENT_NUMBER"
@@ -310,7 +310,7 @@ get_option()
                 echo_error "Error: ${FUNCNAME}: unrecognized option ${OOA}"
         fi
         
-        #
+        # 处理变量
         OOA=$(echo "$OOA" | sed "s/=$//g")
         
         if [[ -n "$LONG_OPTION_LIST" ]]; then
