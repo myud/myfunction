@@ -382,6 +382,7 @@ get_option()
                         echo_error "Error: unrecognized option ${OPTION}"
                 fi
                 
+                # 过滤有效的长选项, 如果是有参数的长选项不能缺少参数
                 if [[ "$OOA_TYPE" == "long_argument" ]] && ( echo "$OPTION" | grep "^--${OOA}$" &> /dev/null ); then
                         echo_error "Error: unrecognized option ${OPTION}"
                 fi
