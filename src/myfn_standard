@@ -401,8 +401,7 @@ get_option()
                 
                 # 过滤有效的短选项, 如果存在 -abcd /root 则认为 abc 为无参数的短选项, d 为有参数的短选项, 因为 d 是最后一个字母
                 # 所以 -abcd /root 等价于 -a -b -c -d /root 或者 -abc -d /root
-                # 如果是无参数的短选项不能带有参数
-                # 如果是有参数的短选项不能缺少参数
+                # 如果是无参数的短选项不能带有参数, 如果是有参数的短选项不能缺少参数
                 if ( echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
                         NUM_PLUS=$(( NUM+1 ))
                         
