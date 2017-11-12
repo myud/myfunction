@@ -431,22 +431,22 @@ get_option()
                         continue 1
                 fi
                 
+                # 获得长选项
                 if [[ "$OOA_TYPE" == "long_option" ]] && ( echo "$OPTION" | grep "^--${OOA}$" &> /dev/null ); then
                         echo "$OOA"
                         break 1
                 fi
                 
+                # 获得长参数
                 if [[ "$OOA_TYPE" == "long_argument" ]] && ( echo "$OPTION" | grep "^--${OOA}=[^=]" &> /dev/null ); then
                         echo "$OPTION" | cut -d= -f 2-
                         break 1
                 fi
                 
                 if ( echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
-                        
                         NUM_PLUS=$(( NUM+1 ))
                         
                         if (( NUM_PLUS <= ($#-CAN) )) && ( echo "${!NUM_PLUS}" | grep -v "^-" &> /dev/null ); then
-                                
                                 if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "${OOA}[A-Za-z]" &> /dev/null ); then
                                         echo "$OOA"
                                         break 1
@@ -456,16 +456,12 @@ get_option()
                                         echo "${!NUM_PLUS}"
                                         break 1
                                 fi
-                                
                         else
-                                
                                 if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "$OOA" &> /dev/null ); then
                                         echo "$OOA"
                                         break 1
                                 fi
-                                
                         fi
-                        
                 fi
                 
         done
