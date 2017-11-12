@@ -290,7 +290,7 @@ get_option()
         local NUM_PLUS=
         local OPTION_TMPVAR=
         
-        # 检测 $1, 0 <= $1 <= 命令所有选项的个数
+        # 检测 $1, 0 <= $1 <= 所有命令选项的个数
         if [[ -z "$CAN" ]] || [[ "$CAN" > "$(( $#-2 ))" ]]; then
                 echo_error "Error: missing operand"
         fi
