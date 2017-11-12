@@ -462,11 +462,13 @@ get_option()
                                 fi
                                 
                         else
+                                
                                 # 获得短选项 (无参数的时候)
                                 if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "$OOA" &> /dev/null ); then
                                         echo "$OOA"
                                         break 1
                                 fi
+                                
                         fi
                 fi
                 
