@@ -397,10 +397,12 @@ get_option()
                         # 获得短选项的参数
                         if (( NUM_PLUS <= ($#-CAN) )) && ( echo "${!NUM_PLUS}" | grep -v "^-" &> /dev/null ); then
                                 
+                                # 无参数的
                                 if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "${OOA}$" &> /dev/null ); then
                                         echo_error "Error: unrecognized option ${OPTION}"
                                 fi
                                 
+                                # 有参数的
                                 if [[ "$OOA_TYPE" == "short_argument" ]] && ( echo "$OPTION" | grep "${OOA}[A-Za-z]" &> /dev/null ); then
                                         echo_error "Error: unrecognized option ${OPTION}"
                                 fi
