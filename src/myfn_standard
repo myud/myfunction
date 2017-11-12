@@ -394,6 +394,7 @@ get_option()
                 if ( echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
                         NUM_PLUS=$(( NUM+1 ))
                         
+                        # 获得短选项的参数
                         if (( NUM_PLUS <= ($#-CAN) )) && ( echo "${!NUM_PLUS}" | grep -v "^-" &> /dev/null ); then
                                 
                                 if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "${OOA}$" &> /dev/null ); then
