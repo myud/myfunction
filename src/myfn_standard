@@ -361,7 +361,7 @@ get_option()
                         fi
                 fi
                 
-                # 
+                # 过滤无效的长选项, $LONG_OPTION_LIST 是有效的长选项的列表
                 if [[ -n "$LONG_OPTION_LIST" ]] && ( echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*" &> /dev/null ); then
                         OPTION_TMPVAR=$(echo "$OPTION" | cut -d= -f 1 | sed "s/\-//g")
                         
