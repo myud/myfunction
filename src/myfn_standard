@@ -333,6 +333,7 @@ get_option()
                         continue 1
                 fi
                 
+                # 命令参数的形式: 非 - 开头, 如: /root
                 if [[ "$NUM" > "$(( $#-CAN ))" ]]; then
                         if ( echo "$OPTION" | grep "^-" &> /dev/null ); then
                                 echo_error "Error: missing operand"
