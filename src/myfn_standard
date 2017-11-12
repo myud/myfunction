@@ -21,7 +21,10 @@ SHORT_OPTION_LIST=
 ############################################################
 echo_color()
 {
-        echo -e "\e[1m\e[40;${2}m${1}\e[0m"
+        local MESSAGE="$1"
+        local COLOR="$2"
+        
+        echo -e "\e[1m\e[40;${COLOR}m${MESSAGE}\e[0m"
 }
 
 
@@ -34,7 +37,10 @@ echo_color()
 ############################################################
 echo_line()
 {
-        echo -n "$(echo_color "$1" "$2")"
+        local MESSAGE="$1"
+        local COLOR="$2"
+        
+        echo -n "$(echo_color "$MESSAGE" "$COLOR")"
 }
 
 
@@ -47,7 +53,9 @@ echo_line()
 ############################################################
 echo_success()
 {
-        echo_color "$1" "32"
+        local MESSAGE="$1"
+        
+        echo_color "$MESSAGE" "32"
 }
 
 
@@ -60,7 +68,9 @@ echo_success()
 ############################################################
 echo_error()
 {
-        echo_color "$1" "31"
+        local MESSAGE="$1"
+        
+        echo_color "$MESSAGE" "31"
         exit 1
 }
 
@@ -74,7 +84,9 @@ echo_error()
 ############################################################
 echo_warning()
 {
-        echo_color "$1" "33"
+        local MESSAGE="$1"
+        
+        echo_color "$MESSAGE" "33"
         sleep 3
 }
 
@@ -88,8 +100,10 @@ echo_warning()
 ############################################################
 display_success()
 {
+        local MESSAGE="$1"
+        
         echo_line "Success: " "32"
-        echo "$1"
+        echo "$MESSAGE"
 }
 
 
