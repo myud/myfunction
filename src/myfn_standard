@@ -342,23 +342,20 @@ get_option()
                         continue 1
                 fi
                 
+                # 
                 if ( echo "$OPTION" | grep "^-" &> /dev/null ); then
-                        
                         if ( ! echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ) \
                         && ( ! echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*$" &> /dev/null ) \
                         && ( ! echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=[^=]" &> /dev/null ); then
                                 
                                 echo_error "Error: unrecognized option ${OPTION}"
                         fi
-                        
                 else
-                        
                         NUM_MINUS=$(( NUM-1 ))
                         
                         if (( NUM_MINUS < 3 )) || ( ! echo "${!NUM_MINUS}" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
                                 echo_error "Error: unrecognized option ${OPTION}"
                         fi
-                        
                 fi
                 
                 if [[ -n "$LONG_OPTION_LIST" ]] && ( echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*" &> /dev/null ); then
