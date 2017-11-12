@@ -420,7 +420,7 @@ get_option()
                 return 0
         fi
         
-        #
+        # 获得长选项, 长参数, 短选项, 短参数, 并跳出循环
         NUM="0"
         
         for OPTION in "$@"; do
@@ -443,20 +443,26 @@ get_option()
                         break 1
                 fi
                 
+                # 获得短选项, 短参数
                 if ( echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
                         NUM_PLUS=$(( NUM+1 ))
                         
                         if (( NUM_PLUS <= ($#-CAN) )) && ( echo "${!NUM_PLUS}" | grep -v "^-" &> /dev/null ); then
+                                
+                                # 获得短选项 (有参数的时候)
                                 if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "${OOA}[A-Za-z]" &> /dev/null ); then
                                         echo "$OOA"
                                         break 1
                                 fi
                                 
+                                # 获得短参数 (有参数的时候)
                                 if [[ "$OOA_TYPE" == "short_argument" ]] && ( echo "$OPTION" | grep "${OOA}$" &> /dev/null ); then
                                         echo "${!NUM_PLUS}"
                                         break 1
                                 fi
+                                
                         else
+                                # 获得短选项 (无参数的时候)
                                 if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "$OOA" &> /dev/null ); then
                                         echo "$OOA"
                                         break 1
