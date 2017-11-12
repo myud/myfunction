@@ -322,7 +322,7 @@ get_option()
                 SHORT_OPTION_LIST=$(echo "$SHORT_OPTION_LIST" | sed "s/\-//g" | sed "s/[ \t][ \t]*//g")
         fi
         
-        # 检测选项或参数
+        # 检测 $3 至 $#, 包括: 命令参数, 长选项, 长参数, 短选项, 短参数
         NUM="0"
         
         for OPTION in "$@"; do
