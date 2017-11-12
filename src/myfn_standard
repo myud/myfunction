@@ -342,7 +342,10 @@ get_option()
                         continue 1
                 fi
                 
-                # 
+                # 长选项的形式: 以 -- 开头, 后接字母, 再接字母或数字, 如: --file1
+                # 长参数的形式: 以 -- 开头, 后接字母, 再接字母或数字, 再接 =, 再接非 =, 如: --file1=a.txt
+                # 短选项的形式: 以 - 开头, 后接字母, 如: -abc
+                # 短参数的形式: 非 - 开头, 前一个选项必须为短选项, 如: -f a.txt
                 if ( echo "$OPTION" | grep "^-" &> /dev/null ); then
                         if ( ! echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ) \
                         && ( ! echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*$" &> /dev/null ) \
