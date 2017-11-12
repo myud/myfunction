@@ -412,14 +412,12 @@ get_option()
                 
         done
         
-        # 获取命令参数
+        # 获取命令参数并退出函数
         if [[ "$OOA_TYPE" == "command_argument" ]]; then
-                
                 OOA_NUM=$(( $#-OOA+1 ))
                 echo "${!OOA_NUM}"
                 
                 return 0
-                
         fi
         
         #
