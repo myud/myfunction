@@ -664,6 +664,10 @@ myud_caw()
         mkdir -p ${DIR}
         
         # 安装工具
+        if [[ ! -s "/etc/yum.repos.d/epel.repo" ]]; then
+                curl -sSo /etc/yum.repos.d/epel.repo https://gitee.com/mydownload/mycommand/raw/master/resource/cobbler/epel.repo
+        fi
+        
         for (( NUM=0; NUM < 5; NUM++ )); do
                 yum -y install curl wget axel
         done
