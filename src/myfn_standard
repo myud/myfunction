@@ -621,12 +621,17 @@ myud_caw()
         [[ "$HOLD_REMOVE" == "h" ]] && HOLD_REMOVE="hold"
         [[ "$HOLD_REMOVE" == "r" ]] && HOLD_REMOVE="remove"
         
+        # 获取 DIR
+        OPTION_LIST="d= dir="
         
-        
-        
-        
-        
-        
+        for OPTION in ${OPTION_LIST}; do
+                get_option "1" "$OPTION" "$@" > /dev/null && OPTION_RETURN=$(get_option "1" "$OPTION" "$@")
+                
+                if [[ -n "$OPTION_RETURN" ]]; then
+                        DIR="$OPTION_RETURN"
+                        break 1
+                fi
+        done
         
         
         
