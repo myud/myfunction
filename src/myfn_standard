@@ -645,6 +645,11 @@ myud_caw()
                 fi
         done
         
+        # 检测 DIR
+        if ( ! echo "$DIR" | grep "^/" &> /dev/null ); then
+                DIR="$(pwd)/${DIR}"
+        fi
+        
         # 检测 MD5
         if [[ -n "$MD5" ]] && ( ! echo "$MD5" | grep "^[A-Za-z0-9]\{32\}$" &> /dev/null ); then
                 echo_error "Error: md5 error"
