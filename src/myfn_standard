@@ -276,11 +276,11 @@ get_option()
         local ARG3="$3"
         
         if [[ -z "$ARG1" ]] || [[ -z "$ARG2" ]] || [[ -z "$ARG3" ]]; then
-                echo_error "Error: missing operand"
+                echo_error2 "Error: missing operand"
         fi
         
         if (( $# > 9 )); then
-                echo_error "Error: too many operands"
+                echo_error2 "Error: too many operands"
         fi
         
         # 定义变量
@@ -300,7 +300,7 @@ get_option()
         
         # 检测 $1, 0 <= $1 <= 所有命令选项的个数 <= 7
         if [[ -z "$CAN" ]] || [[ "$CAN" > "$(( $#-2 ))" ]]; then
-                echo_error "Error: missing operand"
+                echo_error2 "Error: missing operand"
         fi
         
         # 检测 $2 并定义 OOA_TYPE 的值, 某种情况下 1 <= $2 <= $1
@@ -315,7 +315,7 @@ get_option()
         elif ( echo "$OOA" | grep "^[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=$" &> /dev/null ); then
                 OOA_TYPE="long_argument"
         else
-                echo_error "Error: ${FUNCNAME}: unrecognized option ${OOA}"
+                echo_error2 "Error: ${FUNCNAME}: unrecognized option ${OOA}"
         fi
         
         # 处理变量
@@ -344,7 +344,7 @@ get_option()
                 # 命令参数的形式: 非 - 开头, 如: /root
                 if [[ "$NUM" > "$(( $#-CAN ))" ]]; then
                         if ( echo "$OPTION" | grep "^-" &> /dev/null ); then
-                                echo_error "Error: missing operand"
+                                echo_error2 "Error: missing operand"
                         fi
                         
                         continue 1
@@ -359,13 +359,13 @@ get_option()
                         && ( ! echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*$" &> /dev/null ) \
                         && ( ! echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=[^=]" &> /dev/null ); then
                                 
-                                echo_error "Error: unrecognized option ${OPTION}"
+                                echo_error2 "Error: unrecognized option ${OPTION}"
                         fi
                 else
                         NUM_MINUS=$(( NUM-1 ))
                         
                         if (( NUM_MINUS < 3 )) || ( ! echo "${!NUM_MINUS}" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
-                                echo_error "Error: unrecognized option ${OPTION}"
+                                echo_error2 "Error: unrecognized option ${OPTION}"
                         fi
                 fi
                 
@@ -374,25 +374,25 @@ get_option()
                         OPTION_TMPVAR=$(echo "$OPTION" | cut -d= -f 1 | sed "s/\-//g")
                         
                         if ( echo "$OPTION_TMPVAR" | grep -vE "^${LONG_OPTION_LIST}$" &> /dev/null ); then
-                                echo_error "Error: unrecognized option ${OPTION}"
+                                echo_error2 "Error: unrecognized option ${OPTION}"
                         fi
                 fi
                 
                 # 过滤无效的短选项, $SHORT_OPTION_LIST 是有效的短选项的列表
                 if [[ -n "$SHORT_OPTION_LIST" ]] && ( echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
                         if ( ! echo "$OPTION" | grep "^-[${SHORT_OPTION_LIST}][${SHORT_OPTION_LIST}]*$" &> /dev/null ); then
-                                echo_error "Error: unrecognized option ${OPTION}"
+                                echo_error2 "Error: unrecognized option ${OPTION}"
                         fi
                 fi
                 
                 # 过滤有效的长选项, 如果是无参数的长选项不能带有参数
                 if [[ "$OOA_TYPE" == "long_option" ]] && ( echo "$OPTION" | grep "^--${OOA}=[^=]" &> /dev/null ); then
-                        echo_error "Error: unrecognized option ${OPTION}"
+                        echo_error2 "Error: unrecognized option ${OPTION}"
                 fi
                 
                 # 过滤有效的长选项, 如果是有参数的长选项不能缺少参数
                 if [[ "$OOA_TYPE" == "long_argument" ]] && ( echo "$OPTION" | grep "^--${OOA}$" &> /dev/null ); then
-                        echo_error "Error: unrecognized option ${OPTION}"
+                        echo_error2 "Error: unrecognized option ${OPTION}"
                 fi
                 
                 # 过滤有效的短选项, 如果存在 -abcd /root 则认为 abc 为无参数的短选项, d 为有参数的短选项, 因为 d 是最后一个字母
@@ -406,12 +406,12 @@ get_option()
                                 
                                 # 无参数的短选项 (下一个选项为参数)
                                 if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "${OOA}$" &> /dev/null ); then
-                                        echo_error "Error: unrecognized option ${OPTION}"
+                                        echo_error2 "Error: unrecognized option ${OPTION}"
                                 fi
                                 
                                 # 有参数的短选项 (下一个选项为参数)
                                 if [[ "$OOA_TYPE" == "short_argument" ]] && ( echo "$OPTION" | grep "${OOA}[A-Za-z]" &> /dev/null ); then
-                                        echo_error "Error: unrecognized option ${OPTION}"
+                                        echo_error2 "Error: unrecognized option ${OPTION}"
                                 fi
                                 
                         fi
