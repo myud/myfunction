@@ -162,7 +162,6 @@ time_success()
 adjust_time()
 {
         local NUM=
-        local SECONDS=
         
         if ( ping -c 1 ntp1.aliyun.com &> /dev/null ); then
                 
@@ -181,15 +180,12 @@ adjust_time()
                         
                         echo "adjust system time ${NUM} ..."
                         
-                        SECONDS=$(ntpdate ntp1.aliyun.com | awk '{ print $(NF-1) }')
-                        
-                        if [[ "0" < "$SECONDS" ]] && [[ "$SECONDS" < "1" ]]; then
+                        if ( ntpdate ntp1.aliyun.com | awk '{ print $(NF-1) }' | grep "^[0\-][0\-]*\." &> /dev/null ); then
+                                hwclock -w
                                 break 1
                         fi
                         
                 done
-                
-                hwclock -w
                 
         fi
 }
