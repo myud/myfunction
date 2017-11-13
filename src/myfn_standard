@@ -572,6 +572,9 @@ myud_caw()
         local OPTION_LIST=
         local OPTION_RETURN=
         
+        local NUM=
+        local FILE_PATH=
+        
         # 定义有效的长选项, 短选项
         LONG_OPTION_LIST="curl axel wget remove hold dir md5"
         SHORT_OPTION_LIST="c a w r h d m"
@@ -657,7 +660,52 @@ myud_caw()
                 echo_error "Error: md5 error"
         fi
         
-        #
+        # 创建目录
+        mkdir -p ${DIR}
+        
+        # 安装工具
+        for (( NUM=0; NUM < 5; NUM++ )); do
+                yum -y install curl wget axel
+        done
+        
+        # 删除文件
+        FILE_PATH="${DIR}/${FILE}"
+        
+        if [[ -f "$FILE_PATH" ]] && [[ "$HOLD_REMOVE" == "remove" ]]; then
+                rm -rf "$FILE_PATH"
+        fi
+        
+        # 下载文件并检测 MD5
+        for (( NUM=0; NUM < 10; NUM++ )); do
+                if [[ -s "$FILE_PATH" ]]; then
+                        
+                        if [[ -n "$MD5" ]] && [[ "$MD5" != "$(md5sum "$FILE_PATH" | awk '{ print $1 }')" ]]; then
+                                rm -rf "$FILE_PATH"
+                        else
+                                break 1
+                        fi
+                        
+                else
+                
+                        [[ "$TOOL" == "curl" ]] && curl -o "$FILE_PATH" "$URL"
+                        
+                        [[ "$TOOL" == "axel" ]] && axel -n 10 -o "$DIR" "$URL"
+                        
+                        if [[ "$TOOL" == "wget" ]]; then
+                                if [[ "$HTTP" == "http" ]]; then
+                                        wget -c -P "$DIR" "$URL"
+                                else
+                                        wget -c -P "$DIR" --no-check-certificate "$URL"
+                                fi
+                        fi
+                        
+                fi
+        done
+        
+        # 下载失败
+        if [[ "$NUM" == "10" ]]; then
+                echo_error "Error: ${FILE} download failed"
+        fi
 }
 
 
