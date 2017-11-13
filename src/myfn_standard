@@ -650,27 +650,14 @@ myud_caw()
                 DIR="$(pwd)/${DIR}"
         fi
         
+        DIR=$(echo "$DIR" | sed "s/\/$//g")
+        
         # 检测 MD5
         if [[ -n "$MD5" ]] && ( ! echo "$MD5" | grep "^[A-Za-z0-9]\{32\}$" &> /dev/null ); then
                 echo_error "Error: md5 error"
         fi
         
-        
-        
-        
-        
-        
-        
-        
-        
-        echo "TOOL:$TOOL"
-        echo "HOLD_REMOVE:$HOLD_REMOVE"
-        echo "DIR:$DIR"
-        echo "MD5:$MD5"
-        echo "URL:$URL"
-        echo "FILE:$FILE"
-        echo "HTTP:$HTTP"
-        
+        #
 }
 
 
