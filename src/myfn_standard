@@ -568,8 +568,10 @@ myud_caw()
         local FILE=
         local HTTP=
         
-        
-        
+        #
+        if ( get_option "1" "1" "$@" ); then
+                :
+        fi
         
         
         
