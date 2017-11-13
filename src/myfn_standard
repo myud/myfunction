@@ -594,19 +594,46 @@ myud_caw()
         OPTION_LIST="a w c axel wget curl"
         
         for OPTION in ${OPTION_LIST}; do
-                
                 get_option "1" "$OPTION" "$@" > /dev/null && OPTION_RETURN=$(get_option "1" "$OPTION" "$@")
                 
                 if [[ -n "$OPTION_RETURN" ]]; then
                         TOOL="$OPTION_RETURN"
                         break 1
                 fi
-                
         done
         
         [[ "$TOOL" == "a" ]] && TOOL="axel"
         [[ "$TOOL" == "w" ]] && TOOL="wget"
         [[ "$TOOL" == "c" ]] && TOOL="curl"
+        
+        # 获取 HOLD_REMOVE
+        OPTION_LIST="h r hold remove"
+        
+        for OPTION in ${OPTION_LIST}; do
+                get_option "1" "$OPTION" "$@" > /dev/null && OPTION_RETURN=$(get_option "1" "$OPTION" "$@")
+                
+                if [[ -n "$OPTION_RETURN" ]]; then
+                        HOLD_REMOVE="$OPTION_RETURN"
+                        break 1
+                fi
+        done
+        
+        [[ "$HOLD_REMOVE" == "h" ]] && HOLD_REMOVE="hold"
+        [[ "$HOLD_REMOVE" == "r" ]] && HOLD_REMOVE="remove"
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
