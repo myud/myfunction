@@ -572,6 +572,7 @@ myud_caw()
         local OPTION_LIST=
         local OPTION_RETURN=
         
+        local COMMAND=
         local NUM=
         local FILE_PATH=
         
@@ -664,12 +665,18 @@ myud_caw()
         mkdir -p ${DIR}
         
         # 安装工具
-        if [[ ! -s "/etc/yum.repos.d/epel.repo" ]]; then
-                curl -sSo /etc/yum.repos.d/epel.repo https://gitee.com/mydownload/mycommand/raw/master/resource/cobbler/epel.repo
-        fi
-        
-        for (( NUM=0; NUM < 5; NUM++ )); do
-                yum -y install curl wget axel
+        for COMMAND in "axel" "wget" "curl"; do
+                if ( ! type -p ${COMMAND} &> /dev/null ); then
+                        
+                        curl -sSo /etc/yum.repos.d/epel.repo https://gitee.com/mydownload/mycommand/raw/master/resource/cobbler/epel.repo
+                        
+                        for (( NUM=0; NUM < 5; NUM++ )); do
+                                yum -y install curl wget axel
+                        done
+                        
+                        break 1
+                        
+                fi
         done
         
         # 删除文件
