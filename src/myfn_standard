@@ -576,7 +576,7 @@ myud_caw()
         LONG_OPTION_LIST="curl axel wget remove hold dir md5"
         SHORT_OPTION_LIST="c a w r h d m"
         
-        # 获取 URL, FILE, HTTP
+        # 获取并检测 URL, FILE, HTTP
         get_option "1" "1" "$@" > /dev/null && URL=$(get_option "1" "1" "$@")
         
         if ( echo "$URL" | grep "^http[s]*://." &> /dev/null ); then
@@ -645,7 +645,10 @@ myud_caw()
                 fi
         done
         
-        
+        # 检测 MD5
+        if [[ -n "$MD5" ]] && ( ! echo "$MD5" | grep "^[A-Za-z0-9]\{32\}$" &> /dev/null ); then
+                echo_error "Error: md5 error"
+        fi
         
         
         
