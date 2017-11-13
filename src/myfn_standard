@@ -1,0 +1,651 @@
+#!/bin/bash
+
+############################################################
+#
+#       000 - 全局变量
+#
+############################################################
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+MYFN_LIST=
+START_TIME=$(date "+%s")
+LONG_OPTION_LIST=
+SHORT_OPTION_LIST=
+
+
+############################################################
+#
+#       001 - 显示高亮颜色
+#
+#       echo_color  "信息"  "颜色"
+#
+############################################################
+echo_color()
+{
+        local MESSAGE="$1"
+        local COLOR="$2"
+        
+        echo -e "\e[1m\e[40;${COLOR}m${MESSAGE}\e[0m"
+}
+
+
+############################################################
+#
+#       002 - 显示高亮颜色不换行
+#
+#       echo_line  "信息"  "颜色"
+#
+############################################################
+echo_line()
+{
+        local MESSAGE="$1"
+        local COLOR="$2"
+        
+        echo -n "$(echo_color "$MESSAGE" "$COLOR")"
+}
+
+
+############################################################
+#
+#       003 - 显示成功的提示
+#
+#       echo_success  "信息"
+#
+############################################################
+echo_success()
+{
+        local MESSAGE="$1"
+        
+        echo_color "$MESSAGE" "32"
+}
+
+
+############################################################
+#
+#       004 - 显示错误的提示
+#
+#       echo_error  "信息"
+#
+############################################################
+echo_error()
+{
+        local MESSAGE="$1"
+        
+        echo_color "$MESSAGE" "31"
+        exit 1
+}
+
+
+############################################################
+#
+#       005 - 显示警告的提示
+#
+#       echo_warning  "信息"
+#
+############################################################
+echo_warning()
+{
+        local MESSAGE="$1"
+        
+        echo_color "$MESSAGE" "33"
+        sleep 3
+}
+
+
+############################################################
+#
+#       006 - 显示成功的提示不换行
+#
+#       display_success  "信息"
+#
+############################################################
+display_success()
+{
+        local MESSAGE="$1"
+        
+        echo_line "Success: " "32"
+        echo "$MESSAGE"
+}
+
+
+############################################################
+#
+#       007 - 显示错误的提示不换行
+#
+#       display_error  "信息"
+#
+############################################################
+display_error()
+{
+        local MESSAGE="$1"
+        
+        echo_line "Error: " "31"
+        echo "$MESSAGE"
+        exit 1
+}
+
+
+############################################################
+#
+#       008 - 显示警告的提示不换行
+#
+#       display_warning  "信息"
+#
+############################################################
+display_warning()
+{
+        local MESSAGE="$1"
+        
+        echo_line "Warning: " "33"
+        echo "$MESSAGE"
+        sleep 3
+}
+
+
+############################################################
+#
+#       009 - 将错误的提示重定向到标准错误输出
+#
+#       echo_error2  "信息"
+#
+############################################################
+echo_error2()
+{
+        local MESSAGE="$1"
+        
+        echo_color "$MESSAGE" "31" 1>&2
+        exit 1
+}
+
+
+############################################################
+#
+#       010 - 将警告的提示重定向到标准错误输出
+#
+#       echo_warning2  "信息"
+#
+############################################################
+echo_warning2()
+{
+        local MESSAGE="$1"
+        
+        echo_color "$MESSAGE" "33" 1>&2
+        sleep 3
+}
+
+
+############################################################
+#
+#       011 - 检查用户是否为 root
+#
+#       check_root
+#
+############################################################
+check_root()
+{
+        if [[ "$(id -u)" != "0" ]]; then
+                echo_error "Error: must run with root"
+        fi
+}
+
+
+############################################################
+#
+#       012 - 计时器
+#
+#       time_used
+#
+############################################################
+time_used()
+{
+        local END_TIME=$(date "+%s")
+        local MINUTES=$(( (END_TIME - START_TIME) / 60 ))
+        local SECONDS=$(( (END_TIME - START_TIME) % 60 ))
+        
+        echo_color "${MINUTES} minutes ${SECONDS} seconds" "34"
+}
+
+
+############################################################
+#
+#       013 - 显示成功并计时
+#
+#       time_success
+#
+############################################################
+time_success()
+{
+        display_success "$(time_used)"
+}
+
+
+############################################################
+#
+#       014 - 调整系统时间
+#
+#       adjust_time
+#
+############################################################
+adjust_time()
+{
+        local NUM=
+        
+        if ( ping -c 1 ntp1.aliyun.com &> /dev/null ); then
+                
+                if ( ! type -p ntpdate &> /dev/null ); then
+                        
+                        for (( NUM=0; NUM < 5; NUM++ )); do
+                                yum -y install ntpdate
+                        done
+                        
+                fi
+                
+                systemctl stop    ntpd || true
+                systemctl disable ntpd || true
+                
+                for (( NUM=1; NUM < 11; NUM++ )); do
+                        
+                        echo "adjust system time ${NUM} ..."
+                        
+                        if ( ntpdate ntp1.aliyun.com | awk '{ print $(NF-1) }' | grep "^[0\-][0\-]*\." &> /dev/null ); then
+                                hwclock -w
+                                break 1
+                        fi
+                        
+                done
+                
+        fi
+}
+
+
+############################################################
+#
+#       015 - 获取配置文件的值
+#
+#       config_file  "键"  "值"  "文件"
+#
+############################################################
+config_file()
+{
+        local KEY="$1"
+        local VALUE="$2"
+        local FILE="$3"
+        local LINE=
+        
+        if [[ -z "$KEY" ]] || [[ -z "$VALUE" ]] || [[ -z "$FILE" ]]; then
+                echo_error "Error: missing operand"
+        fi
+        
+        if [[ -s "$FILE" ]]; then
+                
+                while read LINE; do
+                        
+                        if ( echo "$LINE" | grep -iP "^[ \t]*${KEY}[ \t]*=[ \t\"]*${VALUE}[ \t\"]*$" &> /dev/null ); then
+                                
+                                LINE=$(echo "$LINE" | sed "s/^[ \t]*//g" | sed "s/[ \t]*$//g")
+                                LINE=$(echo "$LINE" | sed "s/[ \t]*=[ \t]*/=/g")
+                                LINE=$(echo "$LINE" | sed "s/\"[ \t]*/\"/g" | sed "s/[ \t]*\"/\"/g")
+                                
+                                KEY=$(echo "$LINE" | cut -d= -f 1 | tr "[a-z]" "[A-Z]")
+                                VALUE=$(echo "$LINE" | cut -d= -f 2-)
+                                
+                                LINE="${KEY}=${VALUE}"
+                                
+                                export "$LINE"
+                                
+                        fi
+                        
+                done < ${FILE}
+                
+        fi
+}
+
+
+############################################################
+#
+#       016 - 获取整数
+#
+#       get_number  "数字"
+#
+############################################################
+get_number()
+{
+        local NUM="$1"
+        
+        if ( echo "$NUM" | grep "^[0-9][0-9]*$" &> /dev/null ); then
+                echo "$NUM" | awk '{ print $0+0 }'
+        fi
+}
+
+
+############################################################
+#
+#       017 - 获取命令的选项或参数
+#
+#       get_option  "命令参数的个数"  "选项或参数"  "$@"
+#
+############################################################
+# 命令最多支持 7 个选项或参数
+# command [ -a -b -c | -abc | --file --dir | -f a.txt -d /root | -abcf a.txt -abcd /root | --file=a.txt --dir=/root ] [ URL1 URL2 ... ]
+# get_option "[0-7]" "[1-7]" "$@"        # 获取倒数第几个命令参数        成功则返回该参数, 失败则报错并退出
+# get_option "[0-7]" "f"     "$@"        # 获取某个无参数的短选项        成功则返回该选项, 失败则返回空值
+# get_option "[0-7]" "f="    "$@"        # 获取某个短选项的参数          成功则返回该参数, 失败则返回空值
+# get_option "[0-7]" "file"  "$@"        # 获取某个无参数的长选项        成功则返回该选项, 失败则返回空值
+# get_option "[0-7]" "file=" "$@"        # 获取某个长选项的参数          成功则返回该参数, 失败则返回空值
+get_option()
+{
+        # 将错误分为该函数的错误和调用该函数的脚本的错误, 如果冲突使用脚本的错误信息
+        # 1 ~ 2, 3 ~ $(( $#-CAN )), $(( $#-CAN+1 )) ~ $#
+        
+        # 检测该函数或者定义该函数的默认值 (配合 set -u)
+        local ARG1="$1"
+        local ARG2="$2"
+        local ARG3="$3"
+        
+        if [[ -z "$ARG1" ]] || [[ -z "$ARG2" ]] || [[ -z "$ARG3" ]]; then
+                echo_error2 "Error: missing operand"
+        fi
+        
+        if (( $# > 9 )); then
+                echo_error2 "Error: too many operands"
+        fi
+        
+        # 定义变量
+        local COMMAND_ARGUMENT_NUMBER=$(get_number "$1")
+        local OPTION_OR_ARGUMENT="$2"
+        local CAN="$COMMAND_ARGUMENT_NUMBER"
+        local OOA="$OPTION_OR_ARGUMENT"
+        
+        local OOA_TYPE=
+        local OOA_NUM=
+        
+        local OPTION=
+        local NUM=
+        local NUM_MINUS=
+        local NUM_PLUS=
+        local OPTION_TMPVAR=
+        
+        # 检测 $1, 0 <= $1 <= 所有命令选项的个数 <= 7
+        if [[ -z "$CAN" ]] || [[ "$CAN" > "$(( $#-2 ))" ]]; then
+                echo_error2 "Error: missing operand"
+        fi
+        
+        # 检测 $2 并定义 OOA_TYPE 的值, 某种情况下 1 <= $2 <= $1
+        if   ( echo "$OOA" | grep "^[A-Za-z]$" &> /dev/null ); then
+                OOA_TYPE="short_option"
+        elif ( echo "$OOA" | grep "^[A-Za-z][A-Za-z0-9][A-Za-z0-9]*$" &> /dev/null ); then
+                OOA_TYPE="long_option"
+        elif ( echo "$OOA" | grep "^[1-9][0-9]*$" &> /dev/null ) && (( OOA <= CAN )); then
+                OOA_TYPE="command_argument"
+        elif ( echo "$OOA" | grep "^[A-Za-z]=$" &> /dev/null ); then
+                OOA_TYPE="short_argument"
+        elif ( echo "$OOA" | grep "^[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=$" &> /dev/null ); then
+                OOA_TYPE="long_argument"
+        else
+                echo_error2 "Error: unrecognized option ${OOA}"
+        fi
+        
+        # 处理变量
+        OOA=$(echo "$OOA" | sed "s/=$//g")
+        
+        if [[ -n "$LONG_OPTION_LIST" ]]; then
+                LONG_OPTION_LIST=$(echo "$LONG_OPTION_LIST" | sed "s/\-//g" | sed "s/^[ \t][ \t]*//g" | sed "s/[ \t][ \t]*$//g")
+                LONG_OPTION_LIST=$(echo "$LONG_OPTION_LIST" | sed "s/[ \t][ \t]*/\$\|\^/g")
+        fi
+        
+        if [[ -n "$SHORT_OPTION_LIST" ]]; then
+                SHORT_OPTION_LIST=$(echo "$SHORT_OPTION_LIST" | sed "s/\-//g" | sed "s/[ \t][ \t]*//g")
+        fi
+        
+        # 检测 $3 至 $#, 包括: 命令参数, 长选项, 长参数, 短选项, 短参数
+        NUM="0"
+        
+        for OPTION in "$@"; do
+                
+                NUM=$(( NUM+1 ))
+                
+                if [[ "$NUM" < "3" ]]; then
+                        continue 1
+                fi
+                
+                # 命令参数的形式: 非 - 开头, 如: /root
+                if [[ "$NUM" > "$(( $#-CAN ))" ]]; then
+                        if ( echo "$OPTION" | grep "^-" &> /dev/null ); then
+                                echo_error2 "Error: missing operand"
+                        fi
+                        
+                        continue 1
+                fi
+                
+                # 长选项的形式: 以 -- 开头, 后接字母, 再接字母或数字, 如: --file1
+                # 长参数的形式: 以 -- 开头, 后接字母, 再接字母或数字, 再接 =, 再接非 =, 如: --file1=a.txt
+                # 短选项的形式: 以 - 开头, 后接字母, 如: -abc
+                # 短参数的形式: 非 - 开头, 前一个选项必须为短选项, 如: -f a.txt
+                if ( echo "$OPTION" | grep "^-" &> /dev/null ); then
+                        if ( ! echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ) \
+                        && ( ! echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*$" &> /dev/null ) \
+                        && ( ! echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=[^=]" &> /dev/null ); then
+                                
+                                echo_error2 "Error: unrecognized option ${OPTION}"
+                        fi
+                else
+                        NUM_MINUS=$(( NUM-1 ))
+                        
+                        if (( NUM_MINUS < 3 )) || ( ! echo "${!NUM_MINUS}" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
+                                echo_error2 "Error: unrecognized option ${OPTION}"
+                        fi
+                fi
+                
+                # 过滤无效的长选项, $LONG_OPTION_LIST 是有效的长选项的列表
+                if [[ -n "$LONG_OPTION_LIST" ]] && ( echo "$OPTION" | grep "^--[A-Za-z][A-Za-z0-9][A-Za-z0-9]*" &> /dev/null ); then
+                        OPTION_TMPVAR=$(echo "$OPTION" | cut -d= -f 1 | sed "s/\-//g")
+                        
+                        if ( echo "$OPTION_TMPVAR" | grep -vE "^${LONG_OPTION_LIST}$" &> /dev/null ); then
+                                echo_error2 "Error: unrecognized option ${OPTION}"
+                        fi
+                fi
+                
+                # 过滤无效的短选项, $SHORT_OPTION_LIST 是有效的短选项的列表
+                if [[ -n "$SHORT_OPTION_LIST" ]] && ( echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
+                        if ( ! echo "$OPTION" | grep "^-[${SHORT_OPTION_LIST}][${SHORT_OPTION_LIST}]*$" &> /dev/null ); then
+                                echo_error2 "Error: unrecognized option ${OPTION}"
+                        fi
+                fi
+                
+                # 过滤有效的长选项, 如果是无参数的长选项不能带有参数
+                if [[ "$OOA_TYPE" == "long_option" ]] && ( echo "$OPTION" | grep "^--${OOA}=[^=]" &> /dev/null ); then
+                        echo_error2 "Error: unrecognized option ${OPTION}"
+                fi
+                
+                # 过滤有效的长选项, 如果是有参数的长选项不能缺少参数
+                if [[ "$OOA_TYPE" == "long_argument" ]] && ( echo "$OPTION" | grep "^--${OOA}$" &> /dev/null ); then
+                        echo_error2 "Error: unrecognized option ${OPTION}"
+                fi
+                
+                # 过滤有效的短选项, 如果存在 -abcd /root 则认为 abc 为无参数的短选项, d 为有参数的短选项, 因为 d 是最后一个字母
+                # 所以 -abcd /root 等价于 -a -b -c -d /root 或者 -abc -d /root
+                # 如果是无参数的短选项不能带有参数, 如果是有参数的短选项不能缺少参数
+                if ( echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
+                        NUM_PLUS=$(( NUM+1 ))
+                        
+                        # 获得短选项的参数
+                        if (( NUM_PLUS <= ($#-CAN) )) && ( echo "${!NUM_PLUS}" | grep -v "^-" &> /dev/null ); then
+                                
+                                # 无参数的短选项 (下一个选项为参数)
+                                if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "${OOA}$" &> /dev/null ); then
+                                        echo_error2 "Error: unrecognized option ${OPTION}"
+                                fi
+                                
+                                # 有参数的短选项 (下一个选项为参数)
+                                if [[ "$OOA_TYPE" == "short_argument" ]] && ( echo "$OPTION" | grep "${OOA}[A-Za-z]" &> /dev/null ); then
+                                        echo_error2 "Error: unrecognized option ${OPTION}"
+                                fi
+                                
+                        fi
+                fi
+                
+        done
+        
+        # 获取命令参数并退出函数
+        if [[ "$OOA_TYPE" == "command_argument" ]]; then
+                OOA_NUM=$(( $#-OOA+1 ))
+                echo "${!OOA_NUM}"
+                
+                return 0
+        fi
+        
+        # 获得长选项, 长参数, 短选项, 短参数, 并退出循环
+        NUM="0"
+        
+        for OPTION in "$@"; do
+                
+                NUM=$(( NUM+1 ))
+                
+                if [[ "$NUM" < "3" ]] || [[ "$NUM" > "$(( $#-CAN ))" ]]; then
+                        continue 1
+                fi
+                
+                # 获得长选项
+                if [[ "$OOA_TYPE" == "long_option" ]] && ( echo "$OPTION" | grep "^--${OOA}$" &> /dev/null ); then
+                        echo "$OOA"
+                        break 1
+                fi
+                
+                # 获得长参数
+                if [[ "$OOA_TYPE" == "long_argument" ]] && ( echo "$OPTION" | grep "^--${OOA}=[^=]" &> /dev/null ); then
+                        echo "$OPTION" | cut -d= -f 2-
+                        break 1
+                fi
+                
+                # 获得短选项, 短参数
+                if ( echo "$OPTION" | grep "^-[A-Za-z][A-Za-z]*$" &> /dev/null ); then
+                        NUM_PLUS=$(( NUM+1 ))
+                        
+                        if (( NUM_PLUS <= ($#-CAN) )) && ( echo "${!NUM_PLUS}" | grep -v "^-" &> /dev/null ); then
+                                
+                                # 获得短选项 (有参数的时候)
+                                if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "${OOA}[A-Za-z]" &> /dev/null ); then
+                                        echo "$OOA"
+                                        break 1
+                                fi
+                                
+                                # 获得短参数 (有参数的时候)
+                                if [[ "$OOA_TYPE" == "short_argument" ]] && ( echo "$OPTION" | grep "${OOA}$" &> /dev/null ); then
+                                        echo "${!NUM_PLUS}"
+                                        break 1
+                                fi
+                                
+                        else
+                                
+                                # 获得短选项 (无参数的时候)
+                                if [[ "$OOA_TYPE" == "short_option" ]] && ( echo "$OPTION" | grep "$OOA" &> /dev/null ); then
+                                        echo "$OOA"
+                                        break 1
+                                fi
+                                
+                        fi
+                fi
+                
+        done
+}
+
+
+############################################################
+#
+#       018 - Myud 的下载工具
+#
+#       myud_caw  [  -c|-a|-w  -r|-h  -d DIR  -m MD5  ]  URL
+#
+############################################################
+# myud_caw  [  --curl|--axel|--wget  --remove|--hold  --dir=DIR  --md5=MD5  ]  URL
+myud_caw()
+{
+        # 定义变量的初始值
+        local TOOL="curl"
+        local HOLD_REMOVE="remove"
+        local DIR=$(pwd)
+        local MD5=
+        local URL=
+        local FILE=
+        local HTTP=
+        
+        # 定义有效的长选项, 短选项
+        LONG_OPTION_LIST="curl axel wget remove hold dir md5"
+        SHORT_OPTION_LIST="c a w r h d m"
+        
+        # 获取 URL, FILE, HTTP
+        get_option "1" "1" "$@" > /dev/null && URL=$(get_option "1" "1" "$@")
+        
+        if ( echo "$URL" | grep "^http[s]*://." &> /dev/null ); then
+                FILE=$( echo "$URL" | awk -F/ '{ if (NF>3) { print $NF } }' )
+                HTTP=$( echo "$URL" | awk -F: '{ print $1 }' )
+        else
+                echo_error "Error: missing url"
+        fi
+        
+        if [[ -z "$FILE" ]]; then
+                echo_error "Error: url error"
+        fi
+        
+        # 获取 TOOL
+        get_option "1" "curl" "$@" > /dev/null && local TOOL1=$(get_option "1" "curl" "$@")
+        get_option "1" "axel" "$@" > /dev/null && local TOOL2=$(get_option "1" "axel" "$@")
+        get_option "1" "wget" "$@" > /dev/null && local TOOL3=$(get_option "1" "wget" "$@")
+        get_option "1" "c" "$@"    > /dev/null && local TOOL4=$(get_option "1" "c" "$@")
+        get_option "1" "a" "$@"    > /dev/null && local TOOL5=$(get_option "1" "a" "$@")
+        get_option "1" "w" "$@"    > /dev/null && local TOOL6=$(get_option "1" "w" "$@")
+        
+        local TOOL_LIST="${TOOL1} ${TOOL2} ${TOOL3} ${TOOL4} ${TOOL5} ${TOOL6}"
+        local TOOL_NUM=
+        
+        for TOOL_NUM in ${TOOL_LIST}; do
+                if [[ -n "$TOOL_NUM" ]]; then
+                        TOOL="$TOOL_NUM"
+                        break 1
+                fi
+        done
+        
+        [[ "$TOOL" == "c" ]] && TOOL="curl"
+        [[ "$TOOL" == "a" ]] && TOOL="axel"
+        [[ "$TOOL" == "w" ]] && TOOL="wget"
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        echo "TOOL:$TOOL"
+        echo "HOLD_REMOVE:$HOLD_REMOVE"
+        echo "DIR:$DIR"
+        echo "MD5:$MD5"
+        echo "URL:$URL"
+        echo "FILE:$FILE"
+        echo "HTTP:$HTTP"
+        
+}
+
+
+############################################################
+#
+#       100 - 导入函数
+#
+############################################################
+if [[ -n "$MYFN_LIST" ]]; then
+        for MYFN_FILE in ${MYFN_LIST}; do
+                
+                MYFN_PATH="/usr/local/lib/${MYFN_FILE}"
+                
+                if [[ -s "$MYFN_PATH" ]]; then
+                        . ${MYFN_PATH}
+                else
+                        echo_error "Error: ${MYFN_PATH} not found"
+                fi
+                
+        done
+fi
