@@ -568,6 +568,10 @@ myud_caw()
         local FILE=
         local HTTP=
         
+        local OPTION=
+        local OPTION_LIST=
+        local OPTION_RETURN=
+        
         # 定义有效的长选项, 短选项
         LONG_OPTION_LIST="curl axel wget remove hold dir md5"
         SHORT_OPTION_LIST="c a w r h d m"
@@ -587,32 +591,22 @@ myud_caw()
         fi
         
         # 获取 TOOL
-        get_option "1" "curl" "$@" > /dev/null && local TOOL1=$(get_option "1" "curl" "$@")
-        get_option "1" "axel" "$@" > /dev/null && local TOOL2=$(get_option "1" "axel" "$@")
-        get_option "1" "wget" "$@" > /dev/null && local TOOL3=$(get_option "1" "wget" "$@")
-        get_option "1" "c" "$@"    > /dev/null && local TOOL4=$(get_option "1" "c" "$@")
-        get_option "1" "a" "$@"    > /dev/null && local TOOL5=$(get_option "1" "a" "$@")
-        get_option "1" "w" "$@"    > /dev/null && local TOOL6=$(get_option "1" "w" "$@")
+        OPTION_LIST="a w c axel wget curl"
         
-        local TOOL_LIST="${TOOL1} ${TOOL2} ${TOOL3} ${TOOL4} ${TOOL5} ${TOOL6}"
-        local TOOL_NUM=
-        
-        for TOOL_NUM in ${TOOL_LIST}; do
-                if [[ -n "$TOOL_NUM" ]]; then
-                        TOOL="$TOOL_NUM"
+        for OPTION in ${OPTION_LIST}; do
+                
+                get_option "1" "$OPTION" "$@" > /dev/null && OPTION_RETURN=$(get_option "1" "$OPTION" "$@")
+                
+                if [[ -n "$OPTION_RETURN" ]]; then
+                        TOOL="$OPTION_RETURN"
                         break 1
                 fi
+                
         done
         
-        [[ "$TOOL" == "c" ]] && TOOL="curl"
         [[ "$TOOL" == "a" ]] && TOOL="axel"
         [[ "$TOOL" == "w" ]] && TOOL="wget"
-        
-        
-        
-        
-        
-        
+        [[ "$TOOL" == "c" ]] && TOOL="curl"
         
         
         
