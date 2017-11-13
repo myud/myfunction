@@ -633,8 +633,17 @@ myud_caw()
                 fi
         done
         
+        # 获取 MD5
+        OPTION_LIST="m= md5="
         
-        
+        for OPTION in ${OPTION_LIST}; do
+                get_option "1" "$OPTION" "$@" > /dev/null && OPTION_RETURN=$(get_option "1" "$OPTION" "$@")
+                
+                if [[ -n "$OPTION_RETURN" ]]; then
+                        MD5="$OPTION_RETURN"
+                        break 1
+                fi
+        done
         
         
         
