@@ -497,6 +497,43 @@ get_option()
 # myud_caw  [  --curl|--axel|--wget  --remove|--hold  --dir=DIR  --md5=MD5  ]  URL
 myud_caw()
 {
+        # 定义变量的初始值
+        local TOOL="curl"
+        local HOLD_REMOVE="remove"
+        local DIR=$(pwd)
+        local MD5=
+        local URL=$(get_option "1" "1" "$@")
+        local FILE=
+        local HTTP=
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
 }
 
