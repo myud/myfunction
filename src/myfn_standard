@@ -533,7 +533,13 @@ myud_caw()
         
         
         
-        
+        echo "TOOL:$TOOL"
+        echo "HOLD_REMOVE:$HOLD_REMOVE"
+        echo "DIR:$DIR"
+        echo "MD5:$MD5"
+        echo "URL:$URL"
+        echo "FILE:$FILE"
+        echo "HTTP:$HTTP"
         
 }
 
