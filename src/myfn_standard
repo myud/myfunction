@@ -272,7 +272,7 @@ config_file()
         local LINE=
         
         if [[ -z "$KEY" ]] || [[ -z "$VALUE" ]] || [[ -z "$FILE" ]]; then
-                echo_error "Error: ${FUNCNAME}: missing operand"
+                echo_error "Error: missing operand"
         fi
         
         if [[ -s "$FILE" ]]; then
@@ -381,7 +381,7 @@ get_option()
         elif ( echo "$OOA" | grep "^[A-Za-z][A-Za-z0-9][A-Za-z0-9]*=$" &> /dev/null ); then
                 OOA_TYPE="long_argument"
         else
-                echo_error2 "Error: ${FUNCNAME}: unrecognized option ${OOA}"
+                echo_error2 "Error: unrecognized option ${OOA}"
         fi
         
         # 处理变量
@@ -571,11 +571,16 @@ myud_caw()
         #
         get_option "1" "1" "$@" > /dev/null && URL=$(get_option "1" "1" "$@")
         
+        if ( echo "$URL" | grep "^http[s]*://." &> /dev/null ); then
+                FILE=$( echo "$URL" | awk -F/ '{ if (NF>3) { print $NF } }' )
+                HTTP=$( echo "$URL" | awk -F: '{ print $1 }' )
+        else
+                echo_error "Error: missing url"
+        fi
         
-        
-        
-        
-        
+        if [[ -z "$FILE" ]]; then
+                echo_error "Error: url error"
+        fi
         
         
         
