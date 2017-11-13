@@ -594,7 +594,7 @@ myud_caw()
         get_option "1" "a" "$@"    > /dev/null && local TOOL5=$(get_option "1" "a" "$@")
         get_option "1" "w" "$@"    > /dev/null && local TOOL6=$(get_option "1" "w" "$@")
         
-        local TOOL_LIST="TOOL1 TOOL2 TOOL3 TOOL4 TOOL5 TOOL6"
+        local TOOL_LIST="${TOOL1} ${TOOL2} ${TOOL3} ${TOOL4} ${TOOL5} ${TOOL6}"
         local TOOL_NUM=
         
         for TOOL_NUM in ${TOOL_LIST}; do
@@ -604,9 +604,9 @@ myud_caw()
                 fi
         done
         
-        
-        
-        
+        [[ "$TOOL" == "c" ]] && TOOL="curl"
+        [[ "$TOOL" == "a" ]] && TOOL="axel"
+        [[ "$TOOL" == "w" ]] && TOOL="wget"
         
         
         
