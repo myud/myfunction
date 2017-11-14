@@ -16,9 +16,7 @@ fi
 ############################################################
 URL1="https://gitee.com/mydownload/myfunction/raw/master"
 URL2="src"
-
 FUNCTION_DIR="/usr/local/lib"
-
 HOLD_FUNCTION="myfn_standard"
 
 ############################################################
