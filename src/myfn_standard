@@ -690,9 +690,7 @@ myud_caw()
         for (( NUM=0; NUM < 10; NUM++ )); do
                 if [[ -s "$FILE_PATH" ]]; then
                         
-                        [[ -n "$MD5" ]] && echo "MD5Check: ${FILE_PATH}"
-                        
-                        if [[ -n "$MD5" ]] && [[ "$MD5" != "$(md5sum "$FILE_PATH" | awk '{ print $1 }')" ]]; then
+                        if [[ -n "$MD5" ]] && echo "MD5Check: ${FILE_PATH}" && [[ "$MD5" != "$(md5sum "$FILE_PATH" | awk '{ print $1 }')" ]]; then
                                 rm -rf "$FILE_PATH"
                         else
                                 break 1
